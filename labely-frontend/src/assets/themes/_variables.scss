@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+$COLOR_DARK_GREY: #212121;
+$COLOR_LIGHT_GREY: #404040;
+$COLOR-SHADOW: rgba(0, 0, 0, 0.2);
+$COLOR-DANGER: #e16a6a;
+$COLOR-BODY-BG: #f0f3f7;
+$COLOR-PRIMARY: #5c3e8d;
+
+$theme-colors: (
+  'primary': $COLOR-PRIMARY,
+  'light': $COLOR_LIGHT_GREY,
+  'black': $COLOR_DARK_GREY,
+  'danger': $COLOR-DANGER
+);
+
+// Body
+$body-bg: $COLOR-BODY-BG;
+//$body-color: $COLOR_DARK_GREY;
+
+// Misc
+$box-shadow: 0 2px 6px 0 $COLOR-SHADOW;
+
+// Typography
+$font-family-sans-serif: 'Roboto', sans-serif;
+$font-size-base: 14;
+
+// Button
+$btn-border-radius: 2px;
+//$btn-border-width: 2px;
+$btn-font-weight: bold;

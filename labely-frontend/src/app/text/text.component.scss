@@ -1,0 +1,52 @@
+@import 'src/assets/themes/variables';
+
+.card {
+  max-width: 20rem;
+  margin-bottom: 15px;
+  border: 0;
+  box-shadow: 0 2px 6px 0 $COLOR-SHADOW;
+
+  &:not(:last-child) {
+    margin-right: 15px;
+  }
+
+  &-footer {
+    border-top: 0;
+    background: hsl(0, 0%, 97%);
+  }
+
+  &-body:hover {
+    background-color: #f9fbfd;
+    transition: 0.3s;
+  }
+}
+
+.label {
+  border: 1px solid $COLOR-PRIMARY;
+  border-radius: 25px;
+  padding: 5px;
+  min-width: 35px;
+  display: inline-block;
+  text-align: center;
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+p {
+  margin-bottom: 5px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .card {
+    max-width: 100%;
+
+    &:not(:last-child) {
+      margin-right: 0;
+    }
+  }
+}

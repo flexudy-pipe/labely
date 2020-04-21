@@ -1,0 +1,15 @@
+<div class="d-sm-flex flex-wrap">
+  <ng-container *ngFor="let item of items">
+    <div class="card">
+      <div class="card-body">
+        <p *ngFor="let i of item | keyvalue">
+          <span class="text-primary font-weight-bold mr-2">{{ i.key }}:</span> {{ i.value }}
+        </p>
+
+        <div class="pointer mt-3">
+          <span class="label" *ngFor="let label of labels" (click)="selectLabel(item, label)"> {{ label }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

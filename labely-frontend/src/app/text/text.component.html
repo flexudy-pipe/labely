@@ -1,22 +1,18 @@
-<ng-container *ngIf="items.length > 0">
+<labely-pagination-container
+  [paginationConfig]="config"
+  (pageDataConfig)="pageChange($event)"
+></labely-pagination-container>
+
+<ng-container *ngIf="data.length > 0">
   <div class="d-sm-flex mb-4">
     <button class="btn btn-primary mr-2" [disabled]="true">Export labeled data to CSV</button>
     <button class="btn btn-outline-primary mr-2" (click)="clearStorage('data')">Clear localStorage</button>
     <button class="btn btn-outline-primary" (click)="clearStorage('labels')">Clear labels</button>
   </div>
-  <div class="d-sm-flex flex-wrap">
-    <ng-container *ngFor="let item of items">
-      <div class="card">
-        <div class="card-body">
-          <p *ngFor="let i of item | keyvalue">
-            <span class="text-primary font-weight-bold mr-2">{{ i.key }}:</span> {{ i.value }}
-          </p>
-
-          <div class="mt-3">
-            <span class="label" *ngFor="let label of labels" (click)="selectLabel(item, label)"> {{ label }}</span>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+  <labely-items-container [items]="data" [labels]="labels"></labely-items-container>
 </ng-container>
+
+<labely-pagination-container
+  [paginationConfig]="config"
+  (pageDataConfig)="pageChange($event)"
+></labely-pagination-container>

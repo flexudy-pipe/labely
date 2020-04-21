@@ -1,11 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-@import "./assets/themes/variables";
+@import './assets/themes/variables';
 @import '~bootstrap/scss/bootstrap';
 
 * {
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
-
-

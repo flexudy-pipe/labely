@@ -19,7 +19,9 @@ export class PaginationContainerComponent implements OnInit {
     config.maxSize = 10;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.emitCurrentPageConfig();
+  }
 
   pageChange(pageNumber: number) {
     this.paginationConfig.currentPageNumber = pageNumber;

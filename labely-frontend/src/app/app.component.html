@@ -1,32 +1,3 @@
 <div class="container mt-5">
-  <form [formGroup]="labelForm" (ngSubmit)="onSubmit()">
-    <div class="form-group d-inline-block">
-      <label for="label">Please enter you labels</label>
-      <div class="input-group">
-        <input autocomplete="off" class="form-control" formControlName="label" id="label" type="text" />
-        <div class="input-group-append">
-          <button class="btn btn-outline-primary" type="submit" [disabled]="!labelForm.valid">Add</button>
-        </div>
-      </div>
-      <ul class="pl-4">
-        <li *ngFor="let label of labels">{{ label }}</li>
-      </ul>
-    </div>
-
-    <div class="form-group">
-      <label for="csvdata">Please upload a .csv file</label>
-      <input id="csvdata" type="file" class="form-control-file" accept=".csv" (change)="handleFileSelect($event)" />
-    </div>
-  </form>
-
-  <labely-pagination-container
-    [paginationConfig]="config"
-    (pageDataConfig)="pageChange($event)"
-  ></labely-pagination-container>
-
-  <labely-projects [data]="result"></labely-projects>
-  <labely-pagination-container
-    [paginationConfig]="config"
-    (pageDataConfig)="pageChange($event)"
-  ></labely-pagination-container>
+  <router-outlet></router-outlet>
 </div>

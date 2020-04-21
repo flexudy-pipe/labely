@@ -14,7 +14,7 @@ export class LabelyService {
     return JSON.parse(localStorage.getItem('labels'));
   }
 
-  public getData() {
+  public getData(): Array<any> {
     return JSON.parse(localStorage.getItem('data'));
   }
 

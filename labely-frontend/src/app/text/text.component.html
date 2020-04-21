@@ -4,12 +4,13 @@
 ></labely-pagination-container>
 
 <ng-container *ngIf="data.length > 0">
-  <div class="d-sm-flex mb-4">
-    <button class="btn btn-primary mr-2" [disabled]="true">Export labeled data to CSV</button>
-    <button class="btn btn-outline-primary mr-2" (click)="clearStorage('data')">Clear localStorage</button>
+  <div class="d-sm-flex flex-wrap mb-4">
+    <button class="btn btn-primary" [disabled]="true">Export labeled data to CSV</button>
+    <button class="btn btn-outline-primary" (click)="clearStorage('data')">Clear localStorage</button>
     <button class="btn btn-outline-primary" (click)="clearStorage('labels')">Clear labels</button>
+    <button class="btn btn-outline-success" (click)="download()">Download labeled data</button>
   </div>
-  <labely-items-container [items]="data" [labels]="labels"></labely-items-container>
+  <labely-items-container [items]="data" [labels]="labels" (labelItem)="labelItem($event)"></labely-items-container>
 </ng-container>
 
 <labely-pagination-container

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ImporterComponent } from '../common/importer/importer.component';
 import { LabelyService } from '../services/labely.service';
+import { Label } from '../models/label-model';
 
 @Component({
   selector: 'labely-label',
@@ -11,13 +12,13 @@ import { LabelyService } from '../services/labely.service';
 export class LabelComponent implements OnInit {
   public static ROUTE = 'label';
 
-  labels = [];
+  labels: Label[] = [];
   constructor(private route: Router, private labelyService: LabelyService) {}
 
   ngOnInit(): void {}
 
-  addLabel(labelName) {
-    this.labels.push(labelName);
+  addLabel(label: Label) {
+    this.labels.push(label);
   }
 
   confirm() {

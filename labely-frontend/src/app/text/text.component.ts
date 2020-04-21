@@ -4,10 +4,9 @@ import { Location } from '@angular/common';
 
 import { LabelyService } from '../services/labely.service';
 import { PageConfig, PaginationConfigModel } from '../models/pagination-config.model';
-import { ImporterComponent } from '../common/importer/importer.component';
 
 @Component({
-  selector: 'labely-projects',
+  selector: 'labely-text',
   templateUrl: './text.component.html',
   styleUrls: ['./text.component.scss']
 })
@@ -30,25 +29,33 @@ export class TextComponent implements OnInit {
     this.config.totalItems = this.labelyService.getData().length;
   }
 
-  clearStorage(item: string) {
-    this.labelyService.clearLocalStorage(item);
-    this.location.back();
+  clearStorage() {
+    this.labelyService.clearLocalStorage();
+    this.route.navigate(['/']);
   }
 
-  private dataToMap(data) {
-    this.data = [];
-    data.forEach(d => {
-      const map = new Map<string, string>();
-      // tslint:disable-next-line:forin
-      for (const n in d) {
-        map.set(n, d[n]);
-      }
-      this.data.push(map);
-    });
+  private convertJSONToMAP(data) {
+    this.data = this.labelyService.convertJSONToMAP(data);
+    console.log(this.data);
   }
 
-  private pageChange(pageConfig: PageConfig) {
+  public pageChange(pageConfig: PageConfig) {
     const result = this.labelyService.getDataByPageSize(pageConfig.pageNumber, pageConfig.pageSize);
-    this.dataToMap(result);
+    this.convertJSONToMAP(result);
+  }
+
+  public labelItem(item): void {
+    this.labelyService.updateItemLabel(item);
+  }
+
+  public download(): void {
+    const data = this.labelyService.getData();
+    const headerList = [];
+    for (const n in data[0]) {
+      if (n !== 'id') {
+        headerList.push(n);
+      }
+    }
+    this.labelyService.downloadFile(data, headerList, 'labeledData');
   }
 }

@@ -7,7 +7,14 @@
         </p>
 
         <div class="pointer mt-3">
-          <span class="label" *ngFor="let label of labels" (click)="selectLabel(item, label)"> {{ label }}</span>
+          <span
+            class="label"
+            [ngClass]="{ 'bg-primary text-white': item.get('label') === label.name }"
+            *ngFor="let label of labels"
+            (click)="selectLabel(item, label)"
+          >
+            {{ label.name }}</span
+          >
         </div>
       </div>
     </div>

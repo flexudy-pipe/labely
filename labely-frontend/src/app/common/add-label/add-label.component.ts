@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Label } from '../../models/label-model';
 
 @Component({
   selector: 'labely-add-label',
@@ -22,7 +23,11 @@ export class AddLabelComponent implements OnInit {
     if (this.labelForm.invalid) {
       return;
     }
-    this.addLabel.emit(this.labelForm.get('label').value);
+    const label: Label = {
+      name: this.labelForm.get('label').value,
+      selected: false
+    };
+    this.addLabel.emit(label);
     this.labelForm.reset();
   }
 }

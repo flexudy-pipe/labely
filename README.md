@@ -13,6 +13,8 @@ The goal of this project is to provide an easy to use open source tool for data 
 9. Have fun labelling
 10. Download your labelled data :D
 
+Here is a 40-second tutorial showing how to use the tool: https://youtu.be/_UYlyz6uthI
+
 **Important Note**
 
 Currently, the application works without (local) backend server, so it only supports files with limited sizes. We recommend labelling in batches, i.e If your CSV is too large, break it into smaller CSV files before working with labely. We also recommend having a max of 1000 rows, although it often works with more.

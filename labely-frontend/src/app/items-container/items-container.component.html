@@ -3,13 +3,20 @@
     <div class="card">
       <div class="card-body">
         <p *ngFor="let i of item | keyvalue">
-          <span class="text-primary font-weight-bold mr-2">{{ i.key }}:</span> {{ i.value }}
+          <ng-container *ngIf="i.key != ID">
+            <span
+              [ngClass]="{ 'text-success': i.key == LABEL }"
+              class="text-primary font-weight-bold mr-2"
+              *ngIf="i.value"
+              >{{ i.key }}:</span
+            >
+            {{ i.value }}
+          </ng-container>
         </p>
-
         <div class="pointer mt-3">
           <span
             class="label"
-            [ngClass]="{ 'bg-primary text-white': item.get('label') === label.name }"
+            [ngClass]="{ 'bg-primary text-white': item.get(LABEL) === label.name }"
             *ngFor="let label of labels"
             (click)="selectLabel(item, label)"
           >

@@ -3,4 +3,4 @@
   <li *ngFor="let label of labels">{{ label.name }}</li>
 </ul>
 
-<div class="btn btn-primary" (click)="confirm()">Confirm Labels</div>
+<button class="btn btn-primary" (click)="confirm()" [disabled]="labels.length <= 0">Confirm Labels</button>

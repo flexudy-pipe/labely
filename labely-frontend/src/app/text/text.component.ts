@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { LabelyService } from '../services/labely.service';
 import { PageConfig, PaginationConfigModel } from '../models/pagination-config.model';
+import { Consts } from '../models/Consts';
 
 @Component({
   selector: 'labely-text',
@@ -36,7 +37,6 @@ export class TextComponent implements OnInit {
 
   private convertJSONToMAP(data) {
     this.data = this.labelyService.convertJSONToMAP(data);
-    console.log(this.data);
   }
 
   public pageChange(pageConfig: PageConfig) {
@@ -45,6 +45,7 @@ export class TextComponent implements OnInit {
   }
 
   public labelItem(item): void {
+    console.log(item);
     this.labelyService.updateItemLabel(item);
   }
 
@@ -52,10 +53,10 @@ export class TextComponent implements OnInit {
     const data = this.labelyService.getData();
     const headerList = [];
     for (const n in data[0]) {
-      if (n !== 'id') {
+      if (n !== Consts.ROW_INDEX) {
         headerList.push(n);
       }
     }
-    this.labelyService.downloadFile(data, headerList, 'labeledData');
+    this.labelyService.downloadFile(data, headerList, Consts.DOWNLOADED_FILE_NAME);
   }
 }

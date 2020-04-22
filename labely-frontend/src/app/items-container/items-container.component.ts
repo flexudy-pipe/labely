@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Label } from '../models/label-model';
+import { Consts } from '../models/Consts';
 
 @Component({
   selector: 'labely-items-container',
@@ -10,13 +11,15 @@ export class ItemsContainerComponent implements OnInit {
   @Input() items: Array<Map<string, string>>;
   @Input() labels: Label[];
   @Output() labelItem = new EventEmitter<any>();
+  ID = Consts.ROW_INDEX;
+  LABEL = Consts.YOUR_LABEL;
 
   constructor() {}
 
   ngOnInit(): void {}
 
   selectLabel(item, label: Label) {
-    if (item.get('id') === label.name) {
+    if (item.get(this.ID) === label.name) {
       return;
     }
     this.updateLabel(item, label.name);
@@ -24,8 +27,8 @@ export class ItemsContainerComponent implements OnInit {
 
   private updateLabel(item, labelName): void {
     this.items.forEach(i => {
-      if (i.get('id') === item.get('id')) {
-        i.set('label', labelName);
+      if (i.get(this.ID) === item.get(this.ID)) {
+        i.set(Consts.YOUR_LABEL, labelName);
         this.labelItem.emit(item);
       }
     });

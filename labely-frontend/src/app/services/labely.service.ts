@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Label } from '../models/label-model';
+import { Consts } from '../models/Consts';
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +22,16 @@ export class LabelyService {
 
   public setData(data: any[]) {
     for (let i = 0; i < data.length; i++) {
-      data[i].id = i;
+      data[i].__row_index = i;
     }
     localStorage.setItem('data', JSON.stringify(data));
   }
 
   public updateItemLabel(item): void {
     const data = this.getData();
-    const index = +item.get('id');
-    data[index].label = item.get('label');
+    const index = +item.get(Consts.ROW_INDEX);
+    console.log(index);
+    data[index].__your_label = item.get(Consts.YOUR_LABEL);
     this.setData(data);
   }
 

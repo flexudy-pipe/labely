@@ -22,6 +22,7 @@ export class LabelComponent implements OnInit {
   }
 
   confirm() {
+    this.labelyService.clearLocalStorage();
     this.labelyService.setLabel(this.labels);
     this.route.navigate([ImporterComponent.ROUTE]);
   }

@@ -5,4 +5,5 @@ The goal of this project is to provide an easy to use open source tool for data 
 1. Download and install `npm` from this site: https://www.npmjs.com/get-npm
 2. Clone this project
 3. In the root directory of the project, type: `cd labely-frontend` in your terminal
-4. 
+4. Then enter the next command: `npm install`
+5. Followed by `ng serve`

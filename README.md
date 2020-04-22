@@ -8,3 +8,5 @@ The goal of this project is to provide an easy to use open source tool for data 
 4. Then enter the next command: `npm install`
 5. Followed by `ng serve`
 6. The go to your browser and enter the address: `http://localhost:4200/`
+
+Attribution: `stackblitz.com snippets`

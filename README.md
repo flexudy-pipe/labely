@@ -14,4 +14,4 @@ The goal of this project is to provide an easy to use open source tool for data 
 <br/>
 <br/>
 
-Attribution: {JSON to CSV code snipet from `stackblitz.com`}
+**Attribution**: {JSON to CSV code snipet from `stackblitz.com`}

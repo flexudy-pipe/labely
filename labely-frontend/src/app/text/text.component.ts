@@ -29,9 +29,6 @@ export class TextComponent implements OnInit {
   ngOnInit(): void {
     this.labels = this.labelyService.getLabels();
     this.config.totalItems = this.labelyService.getData().length;
-    if (this.config.totalItems) {
-      this.route.navigate([ImporterComponent.ROUTE]);
-    }
   }
 
   clearStorage() {

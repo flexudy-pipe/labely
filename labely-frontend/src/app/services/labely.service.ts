@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { Label } from '../models/label-model';
 import { Consts } from '../models/Consts';
 
@@ -24,7 +25,15 @@ export class LabelyService {
     for (let i = 0; i < data.length; i++) {
       data[i].__row_index = i;
     }
-    localStorage.setItem('data', JSON.stringify(data));
+    try {
+      localStorage.setItem('data', JSON.stringify(data));
+    } catch (e) {
+      alert(
+        'Unfortunately, the current version only supports files up to 1 MB. ' +
+          'Try again with a smaller a CSV file ( a subset of your dataset).' +
+          ' We recommend having at most 1000 rows.'
+      );
+    }
   }
 
   public updateItemLabel(item): void {

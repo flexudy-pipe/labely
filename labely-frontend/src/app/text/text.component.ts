@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { LabelyService } from '../services/labely.service';
 import { PageConfig, PaginationConfigModel } from '../models/pagination-config.model';
 import { Consts } from '../models/Consts';
+import { ImporterComponent } from '../common/importer/importer.component';
 
 @Component({
   selector: 'labely-text',
@@ -28,6 +29,9 @@ export class TextComponent implements OnInit {
   ngOnInit(): void {
     this.labels = this.labelyService.getLabels();
     this.config.totalItems = this.labelyService.getData().length;
+    if (this.config.totalItems) {
+      this.route.navigate([ImporterComponent.ROUTE]);
+    }
   }
 
   clearStorage() {

@@ -10,4 +10,8 @@ The goal of this project is to provide an easy to use open source tool for data 
 6. The go to your browser and enter the address: `http://localhost:4200/`
 
 <br/>
-Attribution: `stackblitz.com snippets`
+<br/>
+<br/>
+<br/>
+
+Attribution: {JSON to CSV code snipet from `stackblitz.com`}

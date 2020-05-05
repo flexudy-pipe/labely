@@ -35,7 +35,7 @@ Currently, the application works without (local) backend server, so it only supp
 
 1.  Download and install <a href="https://www.docker.com/get-started">docker</a>
 
-2.  run the script starter.sh
-* open a terminal <br/>
-* use the command cd and go to the current directory [labely] <br/>
-* `./starter.sh` <br/>
+2.  run the script `starter.sh`
+    * open a terminal <br/>
+    * use the command cd and go to the current directory [labely] <br/>
+    * `./starter.sh` <br/>

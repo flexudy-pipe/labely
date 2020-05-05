@@ -16,7 +16,7 @@ Currently, the application works without (local) backend server, so it only supp
 
 ## Installation
 
-### npm setup
+### Option 1: npm setup
 
     1. Download and install npm from this site: https://www.npmjs.com/get-npm
     2. Clone this project
@@ -31,7 +31,7 @@ Currently, the application works without (local) backend server, so it only supp
 
     Here is a 40-second tutorial showing how to use the tool: https://youtu.be/_UYlyz6uthI
 
-### Docker
+### Option 2: Docker
 
 1.  Choose your version, download and install <a href="https://www.docker.com/get-started">docker</a>
 

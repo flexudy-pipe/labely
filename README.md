@@ -33,7 +33,7 @@ Currently, the application works without (local) backend server, so it only supp
 
 ### Option 2: Docker
 
-1.  Choose your version, download and install <a href="https://www.docker.com/get-started">docker</a>
+1.  Download and install <a href="https://www.docker.com/get-started">docker</a>
 
 2.  run the script starter.sh
 * open a terminal <br/>

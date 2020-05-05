@@ -38,6 +38,6 @@ Currently, the application works without (local) backend server, so it only supp
 2.  run the script starter.sh
 
 
-    i.) open a terminal
-    ii.) use the command cd and go to the current directory [labely]
-    iii.) ./starter.sh
+    i.) open a terminal <br/>
+    ii.) use the command cd and go to the current directory [labely] <br/>
+    iii.) ./starter.sh <br/>

@@ -52,12 +52,9 @@ export class TextComponent implements OnInit {
 
   public download(): void {
     const data = this.labelyService.getData();
-    const headerList = [];
-    for (const n in data[0]) {
-      if (n !== Consts.ROW_INDEX) {
-        headerList.push(n);
-      }
-    }
-    this.labelyService.downloadFile(data, headerList, Consts.DOWNLOADED_FILE_NAME);
+    data.forEach(d => delete d[Consts.ROW_INDEX]);
+    console.log(JSON.stringify(data));
+
+    this.labelyService.downloadFile(data, Consts.DOWNLOADED_FILE_NAME);
   }
 }

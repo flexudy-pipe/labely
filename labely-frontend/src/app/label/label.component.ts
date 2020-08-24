@@ -10,7 +10,7 @@ import { Label } from '../models/label-model';
   styleUrls: ['./label.component.scss']
 })
 export class LabelComponent implements OnInit {
-  public static ROUTE = 'label';
+  public static ROUTE = 'csv';
 
   labels: Label[] = [];
   constructor(private route: Router, private labelyService: LabelyService) {}

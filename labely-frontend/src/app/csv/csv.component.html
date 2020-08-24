@@ -1,0 +1,17 @@
+<labely-pagination-container
+  [paginationConfig]="config"
+  (pageDataConfig)="pageChange($event)"
+></labely-pagination-container>
+
+<ng-container *ngIf="data.length > 0">
+  <div class="d-sm-flex flex-wrap mb-4">
+    <button class="btn btn-success" (click)="download()">Download labeled data</button>
+    <button class="btn btn-outline-danger" (click)="clearStorage()">Discard</button>
+  </div>
+  <labely-items-container [items]="data" [labels]="labels" (labelItem)="labelItem($event)"></labely-items-container>
+</ng-container>
+
+<labely-pagination-container
+  [paginationConfig]="config"
+  (pageDataConfig)="pageChange($event)"
+></labely-pagination-container>

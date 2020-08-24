@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { Papa } from 'ngx-papaparse';
 import { LabelyService } from '../../services/labely.service';
-import { TextComponent } from '../../text/text.component';
+import { CsvComponent } from '../../csv/csv.component';
 
 @Component({
   selector: 'labely-import',
@@ -29,7 +29,7 @@ export class ImporterComponent implements OnInit {
         header: true,
         complete: results => {
           this.labelyService.setData(results.data);
-          this.route.navigate([TextComponent.ROUTE]);
+          this.route.navigate([CsvComponent.ROUTE]);
         }
       });
     };

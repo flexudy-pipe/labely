@@ -1,17 +1,18 @@
-<labely-pagination-container
-  [paginationConfig]="config"
-  (pageDataConfig)="pageChange($event)"
-></labely-pagination-container>
+<div class="">
+  <div class="card">
+    <div class="card-body">
+      <p (mouseup)="onMouseUp()" id="words">
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+        dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+        clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+        consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+        diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+        takimata sanctus est Lorem ipsum dolor sit amet.
+      </p>
 
-<ng-container *ngIf="data.length > 0">
-  <div class="d-sm-flex flex-wrap mb-4">
-    <button class="btn btn-success" (click)="download()">Download labeled data</button>
-    <button class="btn btn-outline-danger" (click)="clearStorage()">Discard</button>
+      <div class="pointer mt-3">
+        <span (click)="selectLabel(label)" *ngFor="let label of labels" class="label">{{ label.name }}</span>
+      </div>
+    </div>
   </div>
-  <labely-items-container [items]="data" [labels]="labels" (labelItem)="labelItem($event)"></labely-items-container>
-</ng-container>
-
-<labely-pagination-container
-  [paginationConfig]="config"
-  (pageDataConfig)="pageChange($event)"
-></labely-pagination-container>
+</div>

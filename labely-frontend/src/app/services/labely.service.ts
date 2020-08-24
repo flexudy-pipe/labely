@@ -84,8 +84,6 @@ export class LabelyService {
       quotes: true
     });
 
-    console.log(csvData);
-
     const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
     const dwldLink = document.createElement('a');
     const url = URL.createObjectURL(blob);

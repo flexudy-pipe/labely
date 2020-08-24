@@ -9,6 +9,7 @@ import { Label } from '../models/label-model';
 })
 export class TextComponent implements OnInit, AfterViewInit {
   public static ROUTE = 'text';
+  commonClass = 'word';
   labels: Label[];
   selectedWord: Array<Entity> = [];
   ids: Set<string> = new Set<string>();
@@ -25,8 +26,10 @@ export class TextComponent implements OnInit, AfterViewInit {
 
     for (let i = 0; i < textArray.length; i++) {
       const span = document.createElement('span');
-      span.setAttribute('id', 'id-' + i);
-      span.appendChild(document.createTextNode(textArray[i] + ' '));
+      span.setAttribute('id', i.toString());
+      span.setAttribute('class', this.commonClass);
+      span.appendChild(document.createTextNode(textArray[i]));
+      span.appendChild(document.createTextNode(' '));
       p.appendChild(span);
     }
     console.log(p);
@@ -36,20 +39,20 @@ export class TextComponent implements OnInit, AfterViewInit {
     this.labels = this.labelyService.getLabels();
   }
 
-  onMouseUp() {
+  onMouseUp(): void {
     const selectedText = window.getSelection();
     if (selectedText.getRangeAt) {
       const selRange = selectedText.getRangeAt(0);
       const wordId = selectedText.focusNode.parentElement.id;
 
       try {
-        const tmpIds = []; // for saving all ids of current selection
+        const tmpIds = []; // to save all Ids of the current selection
         const elem = document.getElementById(wordId).cloneNode(true);
         const newNode = document.createElement('span');
         const extractedContents = selRange.cloneContents();
 
+        // if only one word is selected
         if (extractedContents.childElementCount <= 0) {
-          // if we just selected a word
           if (this.ids.has(wordId)) {
             this.isIdPresent = true;
           } else {
@@ -58,11 +61,12 @@ export class TextComponent implements OnInit, AfterViewInit {
             tmpIds.push(wordId);
           }
         } else {
-          // if multiple words was selected
+          // if multiple words are selected
           try {
+            const contentsLength = extractedContents.childNodes.length;
             // Check for overlapped selection
-            for (let i = 0; i < extractedContents.childNodes.length; i++) {
-              const item = extractedContents.childNodes.item(i);
+            for (let i = 0; i < contentsLength; i++) {
+              const item = extractedContents.children.item(i);
               if (this.ids.has(item.id) || item.id === '') {
                 this.isIdPresent = true;
                 break;
@@ -70,13 +74,13 @@ export class TextComponent implements OnInit, AfterViewInit {
             }
 
             if (!this.isIdPresent) {
-              extractedContents.childNodes.forEach(c => {
-                const id = c.id;
+              for (let i = 0; i < contentsLength; i++) {
+                const id = extractedContents.children.item(i).id;
                 const tmp = document.getElementById(id).cloneNode(true);
                 document.getElementById(id).remove();
                 newNode.appendChild(tmp);
                 tmpIds.push(id);
-              });
+              }
             }
           } catch (e) {
             this.isIdPresent = true;
@@ -87,7 +91,7 @@ export class TextComponent implements OnInit, AfterViewInit {
         if (!this.isIdPresent) {
           tmpIds.forEach(id => this.ids.add(id));
           selRange.insertNode(newNode);
-          newNode.setAttribute('class', 'customText bg-primary text-white font-weight-bold px-2 mx-1');
+          newNode.setAttribute('class', 'customText bg-primary text-white font-weight-bold p-1 mx-1');
         }
       } catch (e) {
         console.log('The element you are trying to select was already marked');

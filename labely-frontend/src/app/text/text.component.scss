@@ -28,6 +28,7 @@
   min-width: 35px;
   display: inline-block;
   text-align: center;
+  font-size: 1rem;
 
   &:hover {
     background-color: #7c64a3;
@@ -43,6 +44,8 @@
 
 p {
   margin-bottom: 5px;
+  line-height: 2;
+
   &:last-child {
     margin-bottom: 0;
   }

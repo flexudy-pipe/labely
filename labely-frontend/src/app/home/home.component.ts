@@ -5,12 +5,12 @@ import { LabelyService } from '../services/labely.service';
 import { Label } from '../models/label-model';
 
 @Component({
-  selector: 'labely-label',
-  templateUrl: './label.component.html',
-  styleUrls: ['./label.component.scss']
+  selector: 'labely-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class LabelComponent implements OnInit {
-  public static ROUTE = 'label';
+export class HomeComponent implements OnInit {
+  public static ROUTE = 'home';
 
   labels: Label[] = [];
   constructor(private route: Router, private labelyService: LabelyService) {}

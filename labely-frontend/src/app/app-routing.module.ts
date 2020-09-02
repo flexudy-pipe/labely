@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { CsvComponent } from './csv/csv.component';
-import { LabelComponent } from './label/label.component';
+import { HomeComponent } from './home/home.component';
 import { ImporterComponent } from './common/importer/importer.component';
 import { TextComponent } from './text/text.component';
 
@@ -9,11 +9,11 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: LabelComponent.ROUTE
+    redirectTo: HomeComponent.ROUTE
   },
   {
-    path: LabelComponent.ROUTE,
-    component: LabelComponent
+    path: HomeComponent.ROUTE,
+    component: HomeComponent
   },
   {
     path: ImporterComponent.ROUTE,

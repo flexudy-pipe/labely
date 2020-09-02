@@ -1,0 +1,29 @@
+@import 'src/assets/themes/variables';
+
+.label {
+  font-size: 1rem;
+  border: 1px solid $COLOR-PRIMARY;
+  border-radius: 25px;
+  padding: 5px;
+  min-width: 35px;
+  display: inline-block;
+  text-align: center;
+
+  &--active {
+    text-transform: capitalize;
+    background-color: $COLOR-PRIMARY;
+    color: white;
+    font-weight: bold;
+  }
+
+  &:hover {
+    background-color: #7c64a3;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}

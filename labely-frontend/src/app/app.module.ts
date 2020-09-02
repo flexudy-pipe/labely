@@ -9,10 +9,11 @@ import { AppComponent } from './app.component';
 import { CsvComponent } from './csv/csv.component';
 import { LabelyService } from './services/labely.service';
 import { AddLabelComponent } from './common/add-label/add-label.component';
-import { LabelComponent } from './label/label.component';
+import { HomeComponent } from './home/home.component';
 import { ImporterComponent } from './common/importer/importer.component';
 import { ItemsContainerComponent } from './items-container/items-container.component';
 import { TextComponent } from './text/text.component';
+import { LabelComponent } from './common/label/label.component';
 
 @NgModule({
   declarations: [
@@ -20,10 +21,11 @@ import { TextComponent } from './text/text.component';
     CsvComponent,
     PaginationContainerComponent,
     AddLabelComponent,
-    LabelComponent,
+    HomeComponent,
     ImporterComponent,
     ItemsContainerComponent,
-    TextComponent
+    TextComponent,
+    LabelComponent
   ],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, NgbPaginationModule],
   providers: [LabelyService],

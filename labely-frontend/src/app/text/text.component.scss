@@ -2,13 +2,10 @@
 
 .card {
   max-width: 40rem;
-  margin-bottom: 15px;
+  margin: 0 auto 15px auto;
   border: 0;
   box-shadow: 0 2px 6px 0 $COLOR-SHADOW;
   font-size: 20px;
-  &:not(:last-child) {
-    margin-right: 15px;
-  }
 
   &-footer {
     border-top: 0;
@@ -21,47 +18,7 @@
   }
 }
 
-.label {
-  border: 1px solid $COLOR-PRIMARY;
-  border-radius: 25px;
-  padding: 5px;
-  min-width: 35px;
-  display: inline-block;
-  text-align: center;
-  font-size: 1rem;
-
-  &:hover {
-    background-color: #7c64a3;
-    cursor: pointer;
-    color: white;
-    transition: 0.3s;
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
-  }
-}
-
 p {
   margin-bottom: 5px;
   line-height: 2;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .card {
-    max-width: 100%;
-
-    &:not(:last-child) {
-      margin-right: 0;
-    }
-  }
-}
-
-.text {
-  background-color: $COLOR-PRIMARY;
-  //  padding: 5px;
 }

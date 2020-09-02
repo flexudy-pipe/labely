@@ -7,3 +7,30 @@
   padding: 0;
   -webkit-font-smoothing: antialiased;
 }
+
+mark,
+.mark {
+  padding: 0.25em 0.4em;
+  margin-right: 5px;
+  color: white;
+  background-color: $COLOR-PRIMARY;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  border-radius: 3px;
+
+  &:hover {
+    opacity: 0.8;
+    transition: 0.3s ease-in-out;
+  }
+}
+
+.text-inline-label {
+  background-color: white;
+  color: $COLOR-PRIMARY;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 3px 5px;
+}

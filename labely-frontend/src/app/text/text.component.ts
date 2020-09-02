@@ -9,11 +9,15 @@ import { Label } from '../models/label-model';
 })
 export class TextComponent implements OnInit, AfterViewInit {
   public static ROUTE = 'text';
-  commonClass = 'word';
-  labels: Label[];
-  selectedWord: Array<Entity> = [];
-  ids: Set<string> = new Set<string>();
-  isIdPresent = false;
+
+  activeLabel: Label;
+  labels: Array<Label>;
+
+  private MARK_TAG_NAME = 'MARK';
+  private WORD_CLASS_NAME = 'word';
+  private INLINE_LABEL_CLASS_NAME = 'inline-label';
+  private isIdPresent = false;
+  private markedEntities: Set<string> = new Set<string>();
 
   constructor(private labelyService: LabelyService) {}
 
@@ -27,38 +31,53 @@ export class TextComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < textArray.length; i++) {
       const span = document.createElement('span');
       span.setAttribute('id', i.toString());
-      span.setAttribute('class', this.commonClass);
+      span.setAttribute('class', this.WORD_CLASS_NAME);
       span.appendChild(document.createTextNode(textArray[i]));
       span.appendChild(document.createTextNode(' '));
       p.appendChild(span);
     }
-    console.log(p);
   }
 
   ngOnInit(): void {
     this.labels = this.labelyService.getLabels();
+    if (this.labels.length > 0) {
+      this.labels[0].selected = true;
+      this.activeLabel = this.labels[0];
+    }
   }
 
-  onMouseUp(): void {
+  onMark(): void {
     const selectedText = window.getSelection();
     if (selectedText.getRangeAt) {
       const selRange = selectedText.getRangeAt(0);
       const wordId = selectedText.focusNode.parentElement.id;
 
+      if (wordId.includes('l')) {
+        // the user clicked on the label
+        return;
+      }
+
+      const selectedWord = document.getElementById(wordId).cloneNode(true);
+
       try {
-        const tmpIds = []; // to save all Ids of the current selection
-        const elem = document.getElementById(wordId).cloneNode(true);
-        const newNode = document.createElement('span');
+        const currentSelectionIds = []; // to save all Ids of the current selection
         const extractedContents = selRange.cloneContents();
+
+        const markNodeWrapper = document.createElement('mark');
+        const label = document.createElement('span');
+        label.setAttribute('class', 'text-inline-label ml-2 ' + this.INLINE_LABEL_CLASS_NAME);
+        label.setAttribute('id', 'l-' + wordId);
+        label.textContent = this.activeLabel.name;
 
         // if only one word is selected
         if (extractedContents.childElementCount <= 0) {
-          if (this.ids.has(wordId)) {
+          if (this.markedEntities.has(wordId)) {
             this.isIdPresent = true;
           } else {
             document.getElementById(wordId).remove();
-            newNode.appendChild(elem);
-            tmpIds.push(wordId);
+            markNodeWrapper.appendChild(selectedWord);
+            markNodeWrapper.appendChild(label);
+            currentSelectionIds.push(wordId);
           }
         } else {
           // if multiple words are selected
@@ -67,7 +86,7 @@ export class TextComponent implements OnInit, AfterViewInit {
             // Check for overlapped selection
             for (let i = 0; i < contentsLength; i++) {
               const item = extractedContents.children.item(i);
-              if (this.ids.has(item.id) || item.id === '') {
+              if (this.markedEntities.has(item.id) || item.id === '') {
                 this.isIdPresent = true;
                 break;
               }
@@ -78,8 +97,9 @@ export class TextComponent implements OnInit, AfterViewInit {
                 const id = extractedContents.children.item(i).id;
                 const tmp = document.getElementById(id).cloneNode(true);
                 document.getElementById(id).remove();
-                newNode.appendChild(tmp);
-                tmpIds.push(id);
+                markNodeWrapper.appendChild(tmp);
+                markNodeWrapper.appendChild(label);
+                currentSelectionIds.push(id);
               }
             }
           } catch (e) {
@@ -89,9 +109,9 @@ export class TextComponent implements OnInit, AfterViewInit {
         }
 
         if (!this.isIdPresent) {
-          tmpIds.forEach(id => this.ids.add(id));
-          selRange.insertNode(newNode);
-          newNode.setAttribute('class', 'customText bg-primary text-white font-weight-bold p-1 mx-1');
+          currentSelectionIds.forEach(id => this.markedEntities.add(id));
+          selRange.insertNode(markNodeWrapper);
+          markNodeWrapper.setAttribute('class', 'mark-wrapper');
         }
       } catch (e) {
         console.log('The element you are trying to select was already marked');
@@ -99,11 +119,53 @@ export class TextComponent implements OnInit, AfterViewInit {
         this.isIdPresent = false;
       }
     }
+    selectedText.removeAllRanges();
   }
 
-  selectLabel(label) {
-    // this.currentEntity.label = label;
-    // console.log(this.currentEntity);
+  onRemoveMark(event) {
+    let removed = false;
+
+    try {
+      const parentElement = document.getElementById(event.target.id).parentElement;
+
+      if (parentElement.nodeName.toString() === this.MARK_TAG_NAME) {
+        // if word was selected
+        const grandParentElement = parentElement.parentElement;
+
+        while (parentElement.firstChild != null) {
+          const currentChildNode = parentElement.firstElementChild;
+
+          // copy the current childNode if it is not the label and insert it before the <mark> tag
+          if (!currentChildNode.className.includes(this.INLINE_LABEL_CLASS_NAME)) {
+            const currentChildNodeCopy = currentChildNode.cloneNode(true);
+            grandParentElement.insertBefore(currentChildNodeCopy, parentElement);
+          }
+
+          currentChildNode.remove();
+          this.markedEntities.delete(currentChildNode.id);
+          removed = true;
+        }
+
+        if (removed) {
+          grandParentElement.removeChild(parentElement);
+        }
+      }
+    } catch (e) {
+      console.log('Element could not be unmarked');
+    }
+  }
+
+  selectLabel(label: Label) {
+    this.labels.forEach(l => {
+      if (l.name === label.name) {
+        l.selected = true;
+        this.activeLabel = label;
+      }
+
+      if (l.name === this.activeLabel.name) {
+        l.selected = false;
+      }
+    });
   }
 }
 
@@ -114,7 +176,7 @@ export class DataModel {
 }
 
 export class Entity {
-  uuId: string;
-  end: number;
-  label: string;
+  id: string;
+  text: string;
+  label: Label;
 }

@@ -11,6 +11,7 @@ export class LabelyService {
   constructor(private papa: Papa) {}
 
   public setLabel(labels: Array<Label>) {
+    labels = this.removeDupLabelName(labels); // remove duplicates
     localStorage.setItem('labels', JSON.stringify(labels));
   }
 
@@ -31,7 +32,7 @@ export class LabelyService {
     } catch (e) {
       alert(
         'Unfortunately, the current version only supports files up to 1 MB. ' +
-          'Try again with a smaller a CSV file ( a subset of your dataset).' +
+          'Try again with a smaller CSV file ( a subset of your dataset).' +
           ' We recommend having at most 1000 rows.'
       );
     }
@@ -40,7 +41,6 @@ export class LabelyService {
   public updateItemLabel(item): void {
     const data = this.getData();
     const index = +item.get(Consts.ROW_INDEX);
-    console.log(index);
     data[index].__your_label = item.get(Consts.YOUR_LABEL);
     this.setData(data);
   }
@@ -84,7 +84,7 @@ export class LabelyService {
       quotes: true
     });
 
-    console.log(csvData);
+    console.log('csvDATA ', csvData);
 
     const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
     const dwldLink = document.createElement('a');
@@ -101,5 +101,14 @@ export class LabelyService {
     document.body.appendChild(dwldLink);
     dwldLink.click();
     document.body.removeChild(dwldLink);
+  }
+
+  private removeDupLabelName(labels: Array<Label>): Array<Label> {
+    const labelsHashMap = {};
+    labels = labels.filter((label, _) => {
+      const alreadyExist = labelsHashMap.hasOwnProperty(label.name);
+      return alreadyExist ? false : (labelsHashMap[label.name] = 1);
+    });
+    return labels;
   }
 }

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { LabelyService } from '../services/labely.service';
 import { Label } from '../models/label-model';
+import { Consts } from '../models/Consts';
 
 @Component({
   selector: 'labely-text',
@@ -16,13 +17,17 @@ export class TextComponent implements OnInit, AfterViewInit {
   private MARK_TAG_NAME = 'MARK';
   private WORD_CLASS_NAME = 'word';
   private INLINE_LABEL_CLASS_NAME = 'inline-label';
+  private LABELED_TEXT_NAME = 'labeledText';
   private isIdPresent = false;
   private markedEntities: Set<string> = new Set<string>();
+  private labeledEntities = new Array<Entity>();
+  private textToLabel = '';
 
   constructor(private labelyService: LabelyService) {}
 
   ngAfterViewInit(): void {
     const p = document.getElementById('words');
+    this.textToLabel = p.innerText;
     const firstTextNode = p.firstChild;
     const textArray = firstTextNode.nodeValue.split(' ');
 
@@ -68,7 +73,6 @@ export class TextComponent implements OnInit, AfterViewInit {
         label.setAttribute('class', 'text-inline-label ml-2 ' + this.INLINE_LABEL_CLASS_NAME);
         label.setAttribute('id', 'l-' + wordId);
         label.textContent = this.activeLabel.name;
-
         // if only one word is selected
         if (extractedContents.childElementCount <= 0) {
           if (this.markedEntities.has(wordId)) {
@@ -78,6 +82,7 @@ export class TextComponent implements OnInit, AfterViewInit {
             markNodeWrapper.appendChild(selectedWord);
             markNodeWrapper.appendChild(label);
             currentSelectionIds.push(wordId);
+            this.labeledEntities.push({ id: wordId, text: selectedWord.textContent, label: this.activeLabel.name });
           }
         } else {
           // if multiple words are selected
@@ -93,6 +98,8 @@ export class TextComponent implements OnInit, AfterViewInit {
             }
 
             if (!this.isIdPresent) {
+              const ids = [];
+              let text = '';
               for (let i = 0; i < contentsLength; i++) {
                 const id = extractedContents.children.item(i).id;
                 const tmp = document.getElementById(id).cloneNode(true);
@@ -100,7 +107,10 @@ export class TextComponent implements OnInit, AfterViewInit {
                 markNodeWrapper.appendChild(tmp);
                 markNodeWrapper.appendChild(label);
                 currentSelectionIds.push(id);
+                ids.push(id);
+                text += tmp.textContent;
               }
+              this.labeledEntities.push({ id: ids, text, label: this.activeLabel.name });
             }
           } catch (e) {
             this.isIdPresent = true;
@@ -112,6 +122,7 @@ export class TextComponent implements OnInit, AfterViewInit {
           currentSelectionIds.forEach(id => this.markedEntities.add(id));
           selRange.insertNode(markNodeWrapper);
           markNodeWrapper.setAttribute('class', 'mark-wrapper');
+          localStorage.setItem(this.LABELED_TEXT_NAME, JSON.stringify(this.labeledEntities));
         }
       } catch (e) {
         console.log('The element you are trying to select was already marked');
@@ -143,6 +154,7 @@ export class TextComponent implements OnInit, AfterViewInit {
 
           currentChildNode.remove();
           this.markedEntities.delete(currentChildNode.id);
+          this.removeElementFromLabeledEntities(currentChildNode.id);
           removed = true;
         }
 
@@ -167,16 +179,39 @@ export class TextComponent implements OnInit, AfterViewInit {
       }
     });
   }
-}
 
-export class DataModel {
-  id: number;
-  text: string;
-  entities: Array<Entity>;
+  private removeElementFromLabeledEntities(entityId: string) {
+    let entity = new Entity();
+    for (let i = 0; i < this.labeledEntities.length; i++) {
+      entity = this.labeledEntities[i];
+
+      if (Array.isArray(entity.id)) {
+        const index = entity.id.indexOf(entityId);
+        if (index >= 0) {
+          this.labeledEntities.splice(i, 1);
+        }
+      } else if (entity.id === entityId) {
+        this.labeledEntities.splice(i, 1);
+        return;
+      }
+    }
+    localStorage.setItem(this.LABELED_TEXT_NAME, JSON.stringify(this.labeledEntities));
+  }
+
+  onDataExport(): void {
+    const entities = this.getLabeledData();
+    entities.forEach(item => (item.originalText = this.textToLabel));
+    this.labelyService.downloadFile(entities, Consts.DOWNLOADED_FILE_NAME);
+  }
+
+  getLabeledData(): Array<Entity> {
+    return JSON.parse(localStorage.getItem(this.LABELED_TEXT_NAME));
+  }
 }
 
 export class Entity {
-  id: string;
+  id: string | Array<string>;
   text: string;
-  label: Label;
+  originalText?: string;
+  label: string;
 }

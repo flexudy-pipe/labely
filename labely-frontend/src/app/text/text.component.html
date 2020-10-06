@@ -1,5 +1,10 @@
 <div class="card">
   <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <labely-label (activeLabelEmitter)="selectLabel($event)" [activeLabel]="activeLabel" [labels]="labels">
+      </labely-label>
+      <button class="btn btn-success" (click)="onDataExport()">Download labeled data</button>
+    </div>
     <p (click)="onRemoveMark($event)" (mouseup)="onMark()" id="words">
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
       dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
@@ -8,8 +13,5 @@
       voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
       sanctus est Lorem ipsum dolor sit amet.
     </p>
-
-    <labely-label (activeLabelEmitter)="selectLabel($event)" [activeLabel]="activeLabel" [labels]="labels">
-    </labely-label>
   </div>
 </div>

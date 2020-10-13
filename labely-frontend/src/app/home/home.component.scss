@@ -32,10 +32,33 @@
 }
 
 .list-item {
+  position: relative;
   display: inline-block;
   font-size: 1.2rem;
   padding: 8px 16px;
   margin-bottom: 1rem;
+
+  span {
+    display: none;
+  }
+
+  &:hover {
+    opacity: 0.8;
+    transition: 0.3s;
+
+    span {
+      position: absolute;
+      display: inline;
+      top: -10px;
+      left: -9px;
+      font-size: 10px;
+      padding: 2px 0px;
+      width: 20px;
+      font-weight: bold;
+      border-radius: 50%;
+      background-color: $COLOR-DANGER;
+    }
+  }
 
   &:not(:last-child) {
     margin-right: 1rem;

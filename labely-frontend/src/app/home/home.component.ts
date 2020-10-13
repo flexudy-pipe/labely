@@ -20,12 +20,12 @@ export class HomeComponent implements OnInit {
     this.labels = this.labelyService.getLabels();
   }
 
-  addLabel(label: Label) {
+  addLabel(label: Label): void {
     this.labels.push(label);
     this.isLabelPresent = true;
   }
 
-  onConfirm(id?: number) {
+  onConfirm(id?: number): void {
     this.labelyService.setLabel(this.labels);
     this.isLabelPresent = this.labelyService.isLabelPresent();
     this.isDataPresent = this.labelyService.isDataPresent();
@@ -37,11 +37,15 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  toTextClassification() {
+  toTextClassification(): void {
     this.route.navigate([RoutingPath.CSV]);
   }
 
-  toTextAnnotation() {
+  toTextAnnotation(): void {
     this.route.navigate([RoutingPath.TEXT]);
+  }
+
+  onRemoveLabel(name: string) {
+    this.labels = this.labelyService.removeLabelByNameAndGet(name);
   }
 }

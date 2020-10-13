@@ -1,6 +1,6 @@
 <div class="content text-center mx-auto">
   <div class="content-title block-margin mx-auto">
-    <h1 class="text-white font-weight-bold text-uppercase">Simplest and fastest tool for data labelling</h1>
+    <h1 class="text-white font-weight-bold text-uppercase">Simple and fast tool for data labelling</h1>
   </div>
 
   <div class="block-margin">
@@ -14,7 +14,7 @@
 
     <ul class="d-inline-flex justify-content-center flex-wrap mb-0">
       <li class="list-item rounded bg-success text-capitalize text-white" *ngFor="let label of labels">
-        {{ label.name }}
+        {{ label.name }} <span (click)="onRemoveLabel(label.name)">x</span>
       </li>
     </ul>
   </div>

@@ -79,6 +79,12 @@ export class LabelyService {
     }
   }
 
+  public removeLabelByNameAndGet(name: string): Array<Label> {
+    const labels = this.getLabels().filter(label => label.name !== name);
+    this.setLabel(labels);
+    return labels;
+  }
+
   public convertJSONToMAP(data): Array<any> {
     const result = [];
     data.forEach(d => {

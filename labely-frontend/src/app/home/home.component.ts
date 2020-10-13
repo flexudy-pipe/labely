@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ImporterComponent } from '../common/importer/importer.component';
 import { LabelyService } from '../services/labely.service';
 import { Label } from '../models/label-model';
+import { RoutingPath } from '../models/routingPath';
 
 @Component({
   selector: 'labely-home',
@@ -10,20 +10,38 @@ import { Label } from '../models/label-model';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  public static ROUTE = 'home';
-
   labels: Label[] = [];
+  isDataPresent = true;
+  isLabelPresent = true;
+
   constructor(private route: Router, private labelyService: LabelyService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.labels = this.labelyService.getLabels();
+  }
 
   addLabel(label: Label) {
     this.labels.push(label);
+    this.isLabelPresent = true;
   }
 
-  confirm() {
-    this.labelyService.clearLocalStorage();
+  onConfirm(id?: number) {
     this.labelyService.setLabel(this.labels);
-    this.route.navigate([ImporterComponent.ROUTE]);
+    this.isLabelPresent = this.labelyService.isLabelPresent();
+    this.isDataPresent = this.labelyService.isDataPresent();
+
+    if (id === 0) {
+      this.toTextClassification();
+    } else {
+      this.toTextAnnotation();
+    }
+  }
+
+  toTextClassification() {
+    this.route.navigate([RoutingPath.CSV]);
+  }
+
+  toTextAnnotation() {
+    this.route.navigate([RoutingPath.TEXT]);
   }
 }

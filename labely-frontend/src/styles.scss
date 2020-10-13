@@ -8,16 +8,51 @@
   -webkit-font-smoothing: antialiased;
 }
 
+.label {
+  border: 1px solid $COLOR-SECONDARY;
+  color: $COLOR-SECONDARY;
+  border-radius: 25px;
+  padding: 5px;
+  margin-bottom: 10px;
+  min-width: 35px;
+  display: inline-block;
+  text-align: center;
+
+  &:hover {
+    background-color: #7c64a3;
+    border-color: transparent;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+.mark-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  .word {
+    margin-right: 5px;
+  }
+}
+
 mark,
 .mark {
-  padding: 0.25em 0.4em;
+  padding: 5px;
   margin-right: 5px;
   color: white;
-  background-color: $COLOR-PRIMARY;
+  background-color: $COLOR-SECONDARY;
   font-weight: bold;
   cursor: pointer;
   position: relative;
   border-radius: 3px;
+  line-height: 1.2;
 
   &:hover {
     opacity: 0.8;
@@ -27,10 +62,10 @@ mark,
 
 .text-inline-label {
   background-color: white;
-  color: $COLOR-PRIMARY;
-  font-size: 0.8rem;
+  color: $COLOR-SECONDARY;
+  font-size: 10px;
   text-transform: uppercase;
   border-radius: 8px;
   font-weight: bold;
-  padding: 3px 5px;
+  padding: 4px;
 }

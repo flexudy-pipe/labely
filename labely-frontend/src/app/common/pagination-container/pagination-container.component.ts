@@ -14,7 +14,6 @@ export class PaginationContainerComponent implements OnInit {
 
   constructor(private config: NgbPaginationConfig) {
     // customize default values of paginations used by this component tree
-    config.size = 'sm';
     config.boundaryLinks = true;
     config.maxSize = 10;
   }

@@ -72,7 +72,11 @@ export class LabelyService {
   }
 
   public clearLocalStorage(item?: string) {
-    localStorage.clear();
+    if (item) {
+      localStorage.removeItem(item);
+    } else {
+      localStorage.clear();
+    }
   }
 
   public convertJSONToMAP(data): Array<any> {

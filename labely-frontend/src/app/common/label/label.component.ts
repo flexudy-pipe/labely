@@ -15,7 +15,7 @@ export class LabelComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  selectLabel(label: Label) {
+  selectLabel(label: Label): void {
     this.activeLabelEmitter.emit(label);
   }
 }

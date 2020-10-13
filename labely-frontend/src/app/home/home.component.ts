@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit {
   }
 
   onRemoveLabel(name: string) {
-    this.labels = this.labelyService.removeLabelByNameAndGet(name);
+    this.labels = this.labels.filter(label => label.name !== name);
+    this.labelyService.removeLabelByName(name);
   }
 }

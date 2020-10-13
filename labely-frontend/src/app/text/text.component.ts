@@ -33,20 +33,7 @@ export class TextComponent implements OnInit, AfterViewInit {
   constructor(private labelyService: LabelyService) {}
 
   ngAfterViewInit(): void {
-    const p = document.getElementById('words');
-    this.textToLabel = this.data;
-    const textArray = this.textToLabel.split(' ');
-
-    p.innerText = '';
-
-    for (let i = 0; i < textArray.length; i++) {
-      const span = document.createElement('span');
-      span.setAttribute('id', i.toString());
-      span.setAttribute('class', this.WORD_CLASS_NAME);
-      span.appendChild(document.createTextNode(textArray[i]));
-      span.appendChild(document.createTextNode(' '));
-      p.appendChild(span);
-    }
+    this.setupText();
   }
 
   ngOnInit(): void {
@@ -58,7 +45,7 @@ export class TextComponent implements OnInit, AfterViewInit {
     this.config.totalItems = this.labelyService.getData().length;
   }
 
-  public pageChange(pageConfig: PageConfig) {
+  public pageChange(pageConfig: PageConfig): void {
     const tmp = this.labelyService.getDataByPageSize(pageConfig.pageNumber, pageConfig.pageSize)[0];
     this.data = tmp.text;
     this.ngAfterViewInit();
@@ -70,7 +57,7 @@ export class TextComponent implements OnInit, AfterViewInit {
       const selRange = selectedText.getRangeAt(0);
       const wordId = selectedText.focusNode.parentElement.id;
 
-      if (wordId.includes('l')) {
+      if (wordId.includes('label')) {
         // the user clicked on the label
         return;
       }
@@ -84,7 +71,7 @@ export class TextComponent implements OnInit, AfterViewInit {
         const markNodeWrapper = document.createElement('mark');
         const label = document.createElement('span');
         label.setAttribute('class', 'text-inline-label ' + this.INLINE_LABEL_CLASS_NAME);
-        label.setAttribute('id', 'l-' + wordId);
+        label.setAttribute('id', 'label-' + wordId);
         label.textContent = this.activeLabel.name;
         // if only one word is selected
         if (extractedContents.childElementCount <= 0) {
@@ -146,7 +133,7 @@ export class TextComponent implements OnInit, AfterViewInit {
     selectedText.removeAllRanges();
   }
 
-  onRemoveMark(event) {
+  onRemoveMark(event): void {
     let removed = false;
 
     try {
@@ -180,7 +167,7 @@ export class TextComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selectLabel(label: Label) {
+  selectLabel(label: Label): void {
     this.labels.forEach(l => {
       if (l.name === label.name) {
         l.selected = true;
@@ -217,8 +204,34 @@ export class TextComponent implements OnInit, AfterViewInit {
     this.labelyService.downloadFile(entities, Consts.DOWNLOADED_FILE_NAME);
   }
 
-  getLabeledData(): Array<Entity> {
+  private getLabeledData(): Array<Entity> {
     return JSON.parse(localStorage.getItem(this.LABELED_TEXT_NAME));
+  }
+
+  private setupText(): void {
+    const p = document.getElementById('words');
+    this.textToLabel = this.data;
+    const textArray = this.textToLabel.split(' ');
+
+    p.innerText = '';
+
+    textArray.forEach(word => {
+      const span = document.createElement('span');
+      span.setAttribute('id', this.getId());
+      span.setAttribute('class', this.WORD_CLASS_NAME);
+      span.appendChild(document.createTextNode(word));
+      span.appendChild(document.createTextNode(' '));
+      p.appendChild(span);
+    });
+  }
+
+  private getId(): string {
+    return (
+      '_' +
+      Math.random()
+        .toString(36)
+        .substr(2, 9)
+    );
   }
 }
 

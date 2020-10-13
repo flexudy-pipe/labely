@@ -15,25 +15,37 @@ export class LabelyService {
   }
 
   public getLabels(): Array<Label> {
-    return JSON.parse(localStorage.getItem('labels'));
+    const labels = JSON.parse(localStorage.getItem('labels'));
+    return labels ? labels : [];
   }
 
   public getData(): Array<any> {
-    return JSON.parse(localStorage.getItem('data'));
+    const data = JSON.parse(localStorage.getItem('data'));
+    return data ? data : [];
   }
 
-  public setData(data: any[]) {
+  public isLabelPresent(): boolean {
+    return this.getLabels().length > 0;
+  }
+
+  public isDataPresent(): boolean {
+    return this.getData().length > 0;
+  }
+
+  public setData(data: any[]): boolean {
     for (let i = 0; i < data.length; i++) {
       data[i].__row_index = i;
     }
     try {
       localStorage.setItem('data', JSON.stringify(data));
+      return true;
     } catch (e) {
       alert(
         'Unfortunately, the current version only supports files up to 1 MB. ' +
           'Try again with a smaller a CSV file ( a subset of your dataset).' +
           ' We recommend having at most 1000 rows.'
       );
+      return false;
     }
   }
 

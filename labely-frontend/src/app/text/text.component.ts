@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { LabelyService } from '../services/labely.service';
 import { Label } from '../models/label-model';
 import { Consts } from '../models/Consts';
+import { PageConfig, PaginationConfigModel } from '../models/pagination-config.model';
 
 @Component({
   selector: 'labely-text',
@@ -9,10 +10,16 @@ import { Consts } from '../models/Consts';
   styleUrls: ['./text.component.scss']
 })
 export class TextComponent implements OnInit, AfterViewInit {
-  public static ROUTE = 'text';
-
   activeLabel: Label;
   labels: Array<Label>;
+  data: any;
+
+  config: PaginationConfigModel = {
+    itemsPerPage: 1,
+    currentPageNumber: 1,
+    totalItems: 0,
+    maxSize: 6
+  };
 
   private MARK_TAG_NAME = 'MARK';
   private WORD_CLASS_NAME = 'word';
@@ -27,11 +34,10 @@ export class TextComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     const p = document.getElementById('words');
-    this.textToLabel = p.innerText;
-    const firstTextNode = p.firstChild;
-    const textArray = firstTextNode.nodeValue.split(' ');
+    this.textToLabel = this.data;
+    const textArray = this.textToLabel.split(' ');
 
-    p.removeChild(firstTextNode); // remove default text
+    p.innerText = '';
 
     for (let i = 0; i < textArray.length; i++) {
       const span = document.createElement('span');
@@ -49,6 +55,13 @@ export class TextComponent implements OnInit, AfterViewInit {
       this.labels[0].selected = true;
       this.activeLabel = this.labels[0];
     }
+    this.config.totalItems = this.labelyService.getData().length;
+  }
+
+  public pageChange(pageConfig: PageConfig) {
+    const tmp = this.labelyService.getDataByPageSize(pageConfig.pageNumber, pageConfig.pageSize)[0];
+    this.data = tmp.text;
+    this.ngAfterViewInit();
   }
 
   onMark(): void {
@@ -70,7 +83,7 @@ export class TextComponent implements OnInit, AfterViewInit {
 
         const markNodeWrapper = document.createElement('mark');
         const label = document.createElement('span');
-        label.setAttribute('class', 'text-inline-label ml-2 ' + this.INLINE_LABEL_CLASS_NAME);
+        label.setAttribute('class', 'text-inline-label ' + this.INLINE_LABEL_CLASS_NAME);
         label.setAttribute('id', 'l-' + wordId);
         label.textContent = this.activeLabel.name;
         // if only one word is selected

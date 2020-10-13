@@ -12,8 +12,6 @@ import { Consts } from '../models/Consts';
   styleUrls: ['./csv.component.scss']
 })
 export class CsvComponent implements OnInit {
-  public static ROUTE = 'csv';
-
   data = new Array<Map<string, string>>();
   labels = [];
 

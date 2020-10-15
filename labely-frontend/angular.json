@@ -113,5 +113,8 @@
       }
     }
   },
-  "defaultProject": "labely"
+  "defaultProject": "labely",
+  "cli": {
+    "analytics": "5db88726-4e2d-4a4f-8804-1c74b8ce5fdf"
+  }
 }

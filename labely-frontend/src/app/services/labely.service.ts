@@ -11,7 +11,6 @@ export class LabelyService {
   constructor(private papa: Papa) {}
 
   public setLabel(labels: Array<Label>) {
-    labels = this.removeDupLabelName(labels); // remove duplicates
     localStorage.setItem('labels', JSON.stringify(labels));
   }
 
@@ -101,14 +100,5 @@ export class LabelyService {
     document.body.appendChild(dwldLink);
     dwldLink.click();
     document.body.removeChild(dwldLink);
-  }
-
-  private removeDupLabelName(labels: Array<Label>): Array<Label> {
-    const labelsHashMap = {};
-    labels = labels.filter((label, _) => {
-      const alreadyExist = labelsHashMap.hasOwnProperty(label.name);
-      return alreadyExist ? false : (labelsHashMap[label.name] = 1);
-    });
-    return labels;
   }
 }

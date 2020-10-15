@@ -13,6 +13,7 @@ export class LabelComponent implements OnInit {
   public static ROUTE = 'label';
 
   labels: Label[] = [];
+
   constructor(private route: Router, private labelyService: LabelyService) {}
 
   ngOnInit(): void {}
@@ -22,8 +23,16 @@ export class LabelComponent implements OnInit {
   }
 
   confirm() {
-    this.labelyService.clearLocalStorage();
+    this.labels = this.removeDuplicateLabels();
     this.labelyService.setLabel(this.labels);
+    this.labelyService.clearLocalStorage();
     this.route.navigate([ImporterComponent.ROUTE]);
+  }
+
+  private removeDuplicateLabels(): Label[] {
+    const labelSet = new Set();
+    return this.labels.filter(item =>
+      !labelSet.has(JSON.stringify(item)) ? labelSet.add(JSON.stringify(item)) : false
+    );
   }
 }

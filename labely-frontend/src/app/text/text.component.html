@@ -10,7 +10,7 @@
         </labely-label>
         <button class="btn btn-success mb-2" (click)="onDataExport()">Download labeled data</button>
       </div>
-      <p (click)="onRemoveMark($event)" (mouseup)="onMark()" id="words">
+      <p (click)="onRemoveMark($event)" (mouseup)="onSelectText()" id="words">
         {{ data }}
       </p>
     </div>

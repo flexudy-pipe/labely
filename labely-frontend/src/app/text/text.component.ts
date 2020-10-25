@@ -25,7 +25,6 @@ export class TextComponent implements OnInit, AfterViewInit {
   private WORD_CLASS_NAME = 'word';
   private INLINE_LABEL_CLASS_NAME = 'inline-label';
   private LABELED_TEXT_NAME = 'labeledText';
-  private isIdPresent = false;
   private markedEntities: Set<string> = new Set<string>();
   private labeledEntities = new Array<Entity>();
   private textToLabel = '';
@@ -51,23 +50,24 @@ export class TextComponent implements OnInit, AfterViewInit {
     this.ngAfterViewInit();
   }
 
-  onMark(): void {
+  onSelectText(): void {
     const selectedText = window.getSelection();
     if (selectedText.getRangeAt) {
       const selRange = selectedText.getRangeAt(0);
       const wordId = selectedText.focusNode.parentElement.id;
 
       if (wordId.includes('label')) {
-        // the user clicked on the label
+        // the user clicked on the label to unmark
         return;
       }
 
-      const selectedWord = document.getElementById(wordId).cloneNode(true);
+      const wordElement = document.getElementById(wordId);
+      if (wordElement && wordElement.parentElement.nodeName.toString() === this.MARK_TAG_NAME) {
+        return;
+      }
 
       try {
-        const currentSelectionIds = []; // to save all Ids of the current selection
         const extractedContents = selRange.cloneContents();
-
         const markNodeWrapper = document.createElement('mark');
         const label = document.createElement('span');
         label.setAttribute('class', 'text-inline-label ' + this.INLINE_LABEL_CLASS_NAME);
@@ -75,62 +75,94 @@ export class TextComponent implements OnInit, AfterViewInit {
         label.textContent = this.activeLabel.name;
         // if only one word is selected
         if (extractedContents.childElementCount <= 0) {
-          if (this.markedEntities.has(wordId)) {
-            this.isIdPresent = true;
-          } else {
-            document.getElementById(wordId).remove();
-            markNodeWrapper.appendChild(selectedWord);
-            markNodeWrapper.appendChild(label);
-            currentSelectionIds.push(wordId);
-            this.labeledEntities.push({ id: wordId, text: selectedWord.textContent, label: this.activeLabel.name });
+          if (this.isIdPresent(wordId)) {
+            return;
           }
+
+          const markModel: MarkModel = this.markSingleToken(wordId, label, markNodeWrapper);
+          this.saveLabeledEntities(markModel);
         } else {
           // if multiple words are selected
+
           try {
-            const contentsLength = extractedContents.childNodes.length;
-            // Check for overlapped selection
-            for (let i = 0; i < contentsLength; i++) {
-              const item = extractedContents.children.item(i);
-              if (this.markedEntities.has(item.id) || item.id === '') {
-                this.isIdPresent = true;
-                break;
-              }
+            if (this.isSelectionOverlap(extractedContents)) {
+              // Check for overlapped selection
+              return;
             }
 
-            if (!this.isIdPresent) {
-              const ids = [];
-              let text = '';
-              for (let i = 0; i < contentsLength; i++) {
-                const id = extractedContents.children.item(i).id;
-                const tmp = document.getElementById(id).cloneNode(true);
-                document.getElementById(id).remove();
-                markNodeWrapper.appendChild(tmp);
-                markNodeWrapper.appendChild(label);
-                currentSelectionIds.push(id);
-                ids.push(id);
-                text += tmp.textContent;
-              }
-              this.labeledEntities.push({ id: ids, text, label: this.activeLabel.name });
-            }
+            const markModel: MarkModel = this.markMultipleToken(label, extractedContents, markNodeWrapper);
+            this.saveLabeledEntities(markModel);
           } catch (e) {
-            this.isIdPresent = true;
-            console.log('The selected word overlapped');
+            throw new Error('The selected word overlapped');
           }
         }
 
-        if (!this.isIdPresent) {
-          currentSelectionIds.forEach(id => this.markedEntities.add(id));
-          selRange.insertNode(markNodeWrapper);
-          markNodeWrapper.setAttribute('class', 'mark-wrapper');
-          localStorage.setItem(this.LABELED_TEXT_NAME, JSON.stringify(this.labeledEntities));
-        }
+        selRange.insertNode(markNodeWrapper);
+        markNodeWrapper.setAttribute('class', 'mark-wrapper');
+        localStorage.setItem(this.LABELED_TEXT_NAME, JSON.stringify(this.labeledEntities));
       } catch (e) {
-        console.log('The element you are trying to select was already marked');
+        throw new Error('The element you are trying to select was already marked');
       } finally {
-        this.isIdPresent = false;
+        selectedText.removeAllRanges();
       }
     }
-    selectedText.removeAllRanges();
+  }
+
+  private markSingleToken(id: string, labelSpan: HTMLElement, markNodeWrapper: HTMLElement): MarkModel {
+    const position = +document.getElementById(id).className.split(' ')[1];
+    const selectedWord = document.getElementById(id).cloneNode(true);
+    document.getElementById(id).remove();
+    markNodeWrapper.appendChild(selectedWord);
+    markNodeWrapper.appendChild(labelSpan);
+    this.markedEntities.add(id);
+    return { markNodeWrapper, position, currentIdSelection: id, text: selectedWord.textContent };
+  }
+
+  private markMultipleToken(
+    labelSpan: HTMLElement,
+    extractedContents: DocumentFragment,
+    markNodeWrapper: HTMLElement
+  ): MarkModel {
+    const contents = extractedContents.children;
+    const position = [];
+    const currentIdSelection = [];
+
+    for (let i = 0; i < contents.length; i++) {
+      const id = contents.item(i).id;
+      const markModel: MarkModel = this.markSingleToken(id, labelSpan, markNodeWrapper);
+      currentIdSelection.push(id);
+      position.push(markModel.position);
+    }
+
+    const text = markNodeWrapper.textContent.split(' ');
+    text.pop();
+
+    return { markNodeWrapper, position, currentIdSelection, text: text.join(' ') };
+  }
+
+  private saveLabeledEntities(markModel: MarkModel): void {
+    this.labeledEntities.push({
+      id: markModel.currentIdSelection,
+      position: markModel.position,
+      text: markModel.text,
+      label: this.activeLabel.name,
+      originalText: this.data
+    });
+  }
+
+  private isIdPresent(wordId: string): boolean {
+    return this.markedEntities.has(wordId);
+  }
+
+  private isSelectionOverlap(extractedContents?: DocumentFragment): boolean {
+    const selections = extractedContents.children;
+    for (let i = 0; i < selections.length; i++) {
+      const item = selections.item(i);
+      if (this.isIdPresent(item.id) || item.id === '') {
+        return true;
+      }
+    }
+    return false;
   }
 
   onRemoveMark(event): void {
@@ -200,7 +232,6 @@ export class TextComponent implements OnInit, AfterViewInit {
 
   onDataExport(): void {
     const entities = this.getLabeledData();
-    entities.forEach(item => (item.originalText = this.textToLabel));
     this.labelyService.downloadFile(entities, Consts.DOWNLOADED_FILE_NAME);
   }
 
@@ -215,14 +246,15 @@ export class TextComponent implements OnInit, AfterViewInit {
 
     p.innerText = '';
 
-    textArray.forEach(word => {
+    for (let i = 0; i < textArray.length; i++) {
+      const word = textArray[i];
       const span = document.createElement('span');
       span.setAttribute('id', this.getId());
-      span.setAttribute('class', this.WORD_CLASS_NAME);
+      span.setAttribute('class', this.WORD_CLASS_NAME + ` ${i}`);
       span.appendChild(document.createTextNode(word));
       span.appendChild(document.createTextNode(' '));
       p.appendChild(span);
-    });
+    }
   }
 
   private getId(): string {
@@ -237,7 +269,15 @@ export class TextComponent implements OnInit, AfterViewInit {
 
 export class Entity {
   id: string | Array<string>;
+  position: number | Array<number>;
   text: string;
-  originalText?: string;
+  originalText: string;
   label: string;
+}
+
+export class MarkModel {
+  currentIdSelection?: string | Array<string>;
+  position?: number | Array<number>;
+  markNodeWrapper: HTMLElement;
+  text?: string;
 }

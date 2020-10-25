@@ -1,8 +1,4 @@
 <div class="content">
-  <labely-pagination-container
-    [paginationConfig]="config"
-    (pageDataConfig)="pageChange($event)"
-  ></labely-pagination-container>
   <div class="card">
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center mb-2">
@@ -14,5 +10,8 @@
         {{ data }}
       </p>
     </div>
+    <button class="btn btn-secondary" [disabled]="onDisable()" (click)="onNext()">
+      Next {{ pos + 1 }} / {{ data.length }}
+    </button>
   </div>
 </div>

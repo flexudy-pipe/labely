@@ -1,25 +1,18 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LabelyService } from '../services/labely.service';
 import { Label } from '../models/label-model';
 import { Consts } from '../models/Consts';
-import { PageConfig, PaginationConfigModel } from '../models/pagination-config.model';
 
 @Component({
   selector: 'labely-text',
   templateUrl: './text.component.html',
   styleUrls: ['./text.component.scss']
 })
-export class TextComponent implements OnInit, AfterViewInit {
+export class TextComponent implements OnInit {
   activeLabel: Label;
   labels: Array<Label>;
-  data: any;
-
-  config: PaginationConfigModel = {
-    itemsPerPage: 1,
-    currentPageNumber: 1,
-    totalItems: 0,
-    maxSize: 6
-  };
+  data: Array<any>;
+  pos = 0;
 
   private MARK_TAG_NAME = 'MARK';
   private WORD_CLASS_NAME = 'word';
@@ -31,23 +24,22 @@ export class TextComponent implements OnInit, AfterViewInit {
 
   constructor(private labelyService: LabelyService) {}
 
-  ngAfterViewInit(): void {
-    this.setupText();
-  }
-
   ngOnInit(): void {
+    this.data = this.labelyService.getData();
+    this.setupText(this.pos);
     this.labels = this.labelyService.getLabels();
     if (this.labels.length > 0) {
       this.labels[0].selected = true;
       this.activeLabel = this.labels[0];
     }
-    this.config.totalItems = this.labelyService.getData().length;
   }
 
-  public pageChange(pageConfig: PageConfig): void {
-    const tmp = this.labelyService.getDataByPageSize(pageConfig.pageNumber, pageConfig.pageSize)[0];
-    this.data = tmp.text;
-    this.ngAfterViewInit();
+  onNext() {
+    this.setupText(++this.pos);
+  }
+
+  onDisable(): boolean {
+    return this.pos >= this.data.length - 1;
   }
 
   onSelectText(): void {
@@ -146,7 +138,7 @@ export class TextComponent implements OnInit, AfterViewInit {
       position: markModel.position,
       text: markModel.text,
       label: this.activeLabel.name,
-      originalText: this.data
+      originalText: this.data[this.pos].text
     });
   }
 
@@ -239,9 +231,9 @@ export class TextComponent implements OnInit, AfterViewInit {
     return JSON.parse(localStorage.getItem(this.LABELED_TEXT_NAME));
   }
 
-  private setupText(): void {
+  private setupText(pos?: number): void {
     const p = document.getElementById('words');
-    this.textToLabel = this.data;
+    this.textToLabel = this.data[pos].text;
     const textArray = this.textToLabel.split(' ');
 
     p.innerText = '';

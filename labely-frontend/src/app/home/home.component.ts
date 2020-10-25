@@ -21,8 +21,10 @@ export class HomeComponent implements OnInit {
   }
 
   addLabel(label: Label): void {
-    this.labels.push(label);
-    this.isLabelPresent = true;
+    if (!this.isPresent(label)) {
+      this.labels.push(label);
+      this.isLabelPresent = true;
+    }
   }
 
   onConfirm(id?: number): void {
@@ -48,5 +50,9 @@ export class HomeComponent implements OnInit {
   onRemoveLabel(name: string) {
     this.labels = this.labels.filter(label => label.name !== name);
     this.labelyService.removeLabelByName(name);
+  }
+
+  private isPresent(label: Label): boolean {
+    return !!this.labels.find(l => l.name.toLowerCase() === label.name.toLowerCase());
   }
 }

@@ -1,6 +1,27 @@
-.btn {
-  margin-right: 0.6rem;
-  @media only screen and (max-width: 768px) {
-    margin-bottom: 0.6rem;
+@import 'src/assets/themes/variables';
+
+.content {
+  max-width: 40rem;
+  margin: 0 auto 15px auto;
+}
+.card {
+  border: 0;
+  box-shadow: 0 2px 6px 0 $COLOR-SHADOW;
+
+  &-footer {
+    border-top: 0;
+    background: hsl(0, 0%, 97%);
   }
+
+  &-body:hover {
+    background-color: #f9fbfd;
+    transition: 0.3s;
+  }
+}
+
+p {
+  display: inline-block;
+  margin-bottom: 5px;
+  font-size: 20px;
+  line-height: 2;
 }

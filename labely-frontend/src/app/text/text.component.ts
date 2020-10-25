@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
-
 import { LabelyService } from '../services/labely.service';
-import { PageConfig, PaginationConfigModel } from '../models/pagination-config.model';
+import { Label } from '../models/label-model';
 import { Consts } from '../models/Consts';
-import { ImporterComponent } from '../common/importer/importer.component';
 
 @Component({
   selector: 'labely-text',
@@ -13,48 +9,267 @@ import { ImporterComponent } from '../common/importer/importer.component';
   styleUrls: ['./text.component.scss']
 })
 export class TextComponent implements OnInit {
-  public static ROUTE = 'text-labely';
+  activeLabel: Label;
+  labels: Array<Label>;
+  data: Array<any>;
+  pos = 0;
 
-  data = new Array<Map<string, string>>();
-  labels = [];
+  private MARK_TAG_NAME = 'MARK';
+  private WORD_CLASS_NAME = 'word';
+  private INLINE_LABEL_CLASS_NAME = 'inline-label';
+  private LABELED_TEXT_NAME = 'labeledText';
+  private markedEntities: Set<string> = new Set<string>();
+  private labeledEntities = new Array<Entity>();
+  private textToLabel = '';
 
-  config: PaginationConfigModel = {
-    itemsPerPage: 10,
-    currentPageNumber: 1,
-    totalItems: 0
-  };
-
-  constructor(private location: Location, private route: Router, private labelyService: LabelyService) {}
+  constructor(private labelyService: LabelyService) {}
 
   ngOnInit(): void {
+    this.data = this.labelyService.getData();
+    this.setupText(this.pos);
     this.labels = this.labelyService.getLabels();
-    this.config.totalItems = this.labelyService.getData().length;
+    if (this.labels.length > 0) {
+      this.labels[0].selected = true;
+      this.activeLabel = this.labels[0];
+    }
   }
 
-  clearStorage() {
-    this.labelyService.clearLocalStorage();
-    this.route.navigate(['/']);
+  onNext() {
+    this.setupText(++this.pos);
   }
 
-  private convertJSONToMAP(data) {
-    this.data = this.labelyService.convertJSONToMAP(data);
+  onDisable(): boolean {
+    return this.pos >= this.data.length - 1;
   }
 
-  public pageChange(pageConfig: PageConfig) {
-    const result = this.labelyService.getDataByPageSize(pageConfig.pageNumber, pageConfig.pageSize);
-    this.convertJSONToMAP(result);
+  onSelectText(): void {
+    const selectedText = window.getSelection();
+    if (selectedText.getRangeAt) {
+      const selRange = selectedText.getRangeAt(0);
+      const wordId = selectedText.focusNode.parentElement.id;
+
+      if (wordId.includes('label')) {
+        // the user clicked on the label to unmark
+        return;
+      }
+
+      const wordElement = document.getElementById(wordId);
+      if (wordElement && wordElement.parentElement.nodeName.toString() === this.MARK_TAG_NAME) {
+        return;
+      }
+
+      try {
+        const extractedContents = selRange.cloneContents();
+        const markNodeWrapper = document.createElement('mark');
+        const label = document.createElement('span');
+        label.setAttribute('class', 'text-inline-label ' + this.INLINE_LABEL_CLASS_NAME);
+        label.setAttribute('id', 'label-' + wordId);
+        label.textContent = this.activeLabel.name;
+        // if only one word is selected
+        if (extractedContents.childElementCount <= 0) {
+          if (this.isIdPresent(wordId)) {
+            return;
+          }
+
+          const markModel: MarkModel = this.markSingleToken(wordId, label, markNodeWrapper);
+          this.saveLabeledEntities(markModel);
+        } else {
+          // if multiple words are selected
+
+          try {
+            if (this.isSelectionOverlap(extractedContents)) {
+              // Check for overlapped selection
+              return;
+            }
+
+            const markModel: MarkModel = this.markMultipleToken(label, extractedContents, markNodeWrapper);
+            this.saveLabeledEntities(markModel);
+          } catch (e) {
+            throw new Error('The selected word overlapped');
+          }
+        }
+
+        selRange.insertNode(markNodeWrapper);
+        markNodeWrapper.setAttribute('class', 'mark-wrapper');
+        localStorage.setItem(this.LABELED_TEXT_NAME, JSON.stringify(this.labeledEntities));
+      } catch (e) {
+        throw new Error('The element you are trying to select was already marked');
+      } finally {
+        selectedText.removeAllRanges();
+      }
+    }
   }
 
-  public labelItem(item): void {
-    console.log(item);
-    this.labelyService.updateItemLabel(item);
+  private markSingleToken(id: string, labelSpan: HTMLElement, markNodeWrapper: HTMLElement): MarkModel {
+    const position = +document.getElementById(id).className.split(' ')[1];
+    const selectedWord = document.getElementById(id).cloneNode(true);
+    document.getElementById(id).remove();
+    markNodeWrapper.appendChild(selectedWord);
+    markNodeWrapper.appendChild(labelSpan);
+    this.markedEntities.add(id);
+    return { markNodeWrapper, position, currentIdSelection: id, text: selectedWord.textContent };
   }
 
-  public download(): void {
-    const data = this.labelyService.getData();
-    data.forEach(d => delete d[Consts.ROW_INDEX]);
-    console.log(JSON.stringify(data));
+  private markMultipleToken(
+    labelSpan: HTMLElement,
+    extractedContents: DocumentFragment,
+    markNodeWrapper: HTMLElement
+  ): MarkModel {
+    const contents = extractedContents.children;
+    const position = [];
+    const currentIdSelection = [];
 
-    this.labelyService.downloadFile(data, Consts.DOWNLOADED_FILE_NAME);
+    for (let i = 0; i < contents.length; i++) {
+      const id = contents.item(i).id;
+      const markModel: MarkModel = this.markSingleToken(id, labelSpan, markNodeWrapper);
+      currentIdSelection.push(id);
+      position.push(markModel.position);
+    }
+
+    const text = markNodeWrapper.textContent.split(' ');
+    text.pop();
+
+    return { markNodeWrapper, position, currentIdSelection, text: text.join(' ') };
   }
+
+  private saveLabeledEntities(markModel: MarkModel): void {
+    this.labeledEntities.push({
+      id: markModel.currentIdSelection,
+      position: markModel.position,
+      text: markModel.text,
+      label: this.activeLabel.name,
+      originalText: this.data[this.pos].text
+    });
+  }
+
+  private isIdPresent(wordId: string): boolean {
+    return this.markedEntities.has(wordId);
+  }
+
+  private isSelectionOverlap(extractedContents?: DocumentFragment): boolean {
+    const selections = extractedContents.children;
+    for (let i = 0; i < selections.length; i++) {
+      const item = selections.item(i);
+      if (this.isIdPresent(item.id) || item.id === '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  onRemoveMark(event): void {
+    let removed = false;
+
+    try {
+      const parentElement = document.getElementById(event.target.id).parentElement;
+
+      if (parentElement.nodeName.toString() === this.MARK_TAG_NAME) {
+        // if word was selected
+        const grandParentElement = parentElement.parentElement;
+
+        while (parentElement.firstChild != null) {
+          const currentChildNode = parentElement.firstElementChild;
+
+          // copy the current childNode if it is not the label and insert it before the <mark> tag
+          if (!currentChildNode.className.includes(this.INLINE_LABEL_CLASS_NAME)) {
+            const currentChildNodeCopy = currentChildNode.cloneNode(true);
+            grandParentElement.insertBefore(currentChildNodeCopy, parentElement);
+          }
+
+          currentChildNode.remove();
+          this.markedEntities.delete(currentChildNode.id);
+          this.removeElementFromLabeledEntities(currentChildNode.id);
+          removed = true;
+        }
+
+        if (removed) {
+          grandParentElement.removeChild(parentElement);
+        }
+      }
+    } catch (e) {
+      console.log('Element could not be unmarked');
+    }
+  }
+
+  selectLabel(label: Label): void {
+    this.labels.forEach(l => {
+      if (l.name === label.name) {
+        l.selected = true;
+        this.activeLabel = label;
+      }
+
+      if (l.name === this.activeLabel.name) {
+        l.selected = false;
+      }
+    });
+  }
+
+  private removeElementFromLabeledEntities(entityId: string) {
+    let entity = new Entity();
+    for (let i = 0; i < this.labeledEntities.length; i++) {
+      entity = this.labeledEntities[i];
+
+      if (Array.isArray(entity.id)) {
+        const index = entity.id.indexOf(entityId);
+        if (index >= 0) {
+          this.labeledEntities.splice(i, 1);
+        }
+      } else if (entity.id === entityId) {
+        this.labeledEntities.splice(i, 1);
+        return;
+      }
+    }
+    localStorage.setItem(this.LABELED_TEXT_NAME, JSON.stringify(this.labeledEntities));
+  }
+
+  onDataExport(): void {
+    const entities = this.getLabeledData();
+    this.labelyService.downloadFile(entities, Consts.DOWNLOADED_FILE_NAME);
+  }
+
+  private getLabeledData(): Array<Entity> {
+    return JSON.parse(localStorage.getItem(this.LABELED_TEXT_NAME));
+  }
+
+  private setupText(pos?: number): void {
+    const p = document.getElementById('words');
+    this.textToLabel = this.data[pos].text;
+    const textArray = this.textToLabel.split(' ');
+
+    p.innerText = '';
+
+    for (let i = 0; i < textArray.length; i++) {
+      const word = textArray[i];
+      const span = document.createElement('span');
+      span.setAttribute('id', this.getId());
+      span.setAttribute('class', this.WORD_CLASS_NAME + ` ${i}`);
+      span.appendChild(document.createTextNode(word));
+      span.appendChild(document.createTextNode(' '));
+      p.appendChild(span);
+    }
+  }
+
+  private getId(): string {
+    return (
+      '_' +
+      Math.random()
+        .toString(36)
+        .substr(2, 9)
+    );
+  }
+}
+
+export class Entity {
+  id: string | Array<string>;
+  position: number | Array<number>;
+  text: string;
+  originalText: string;
+  label: string;
+}
+
+export class MarkModel {
+  currentIdSelection?: string | Array<string>;
+  position?: number | Array<number>;
+  markNodeWrapper: HTMLElement;
+  text?: string;
 }

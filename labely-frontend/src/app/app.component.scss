@@ -1,0 +1,19 @@
+.main {
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+}
+.main::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 846px;
+  width: 100%;
+  background-image: url('src/assets/images/lila_background.svg');
+  z-index: -1;
+  background-size: auto auto;
+
+  background-attachment: initial;
+  background-repeat: no-repeat;
+}

@@ -1,6 +1,0 @@
-<labely-add-label (addLabel)="addLabel($event)"></labely-add-label>
-<ul class="pl-4">
-  <li *ngFor="let label of labels">{{ label.name }}</li>
-</ul>
-
-<button class="btn btn-primary" (click)="confirm()" [disabled]="labels.length <= 0">Confirm Labels</button>

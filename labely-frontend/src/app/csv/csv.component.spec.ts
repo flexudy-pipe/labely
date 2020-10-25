@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextComponent } from './text.component';
+import { CsvComponent } from './csv.component';
 
-describe('TextComponent', () => {
-  let component: TextComponent;
-  let fixture: ComponentFixture<TextComponent>;
+describe('ProjectsComponent', () => {
+  let component: CsvComponent;
+  let fixture: ComponentFixture<CsvComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [TextComponent]
+      declarations: [CsvComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TextComponent);
+    fixture = TestBed.createComponent(CsvComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

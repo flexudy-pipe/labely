@@ -1,0 +1,26 @@
+<div class="content text-center mx-auto">
+  <div class="content-title block-margin mx-auto">
+    <h1 class="text-white font-weight-bold text-uppercase">Simple and fast tool for data labelling</h1>
+  </div>
+
+  <div class="block-margin">
+    <labely-import></labely-import>
+    <p *ngIf="!isDataPresent" class="text-danger pt-2">Please import your csv data</p>
+  </div>
+
+  <div class="block-margin">
+    <labely-add-label (addLabel)="addLabel($event)"></labely-add-label>
+    <p *ngIf="!isLabelPresent" class="text-danger pt-2">Please add your labels</p>
+
+    <ul class="d-inline-flex justify-content-center flex-wrap mb-0">
+      <li class="list-item rounded bg-success text-capitalize text-white" *ngFor="let label of labels">
+        {{ label.name }} <span (click)="onRemoveLabel(label.name)">x</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="d-block d-md-flex align-items-center justify-content-center">
+    <button class="btn btn-classification text-white px-4" (click)="onConfirm(0)">Classification</button>
+    <button class="btn btn-annotation text-white px-4" (click)="onConfirm(1)">Text Annotation</button>
+  </div>
+</div>

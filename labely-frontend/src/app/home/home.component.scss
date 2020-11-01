@@ -39,6 +39,7 @@
   margin-bottom: 1rem;
 
   span {
+    cursor: pointer;
     display: none;
   }
 
@@ -52,7 +53,7 @@
       top: -10px;
       left: -9px;
       font-size: 10px;
-      padding: 2px 0px;
+      padding: 2px 0;
       width: 20px;
       font-weight: bold;
       border-radius: 50%;

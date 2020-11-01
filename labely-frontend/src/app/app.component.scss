@@ -1,8 +1,8 @@
 .main {
   height: 100%;
   overflow: hidden;
-  cursor: pointer;
 }
+
 .main::after {
   content: '';
   position: fixed;

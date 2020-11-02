@@ -1,6 +1,10 @@
 .main {
   height: 100%;
   overflow: hidden;
+
+  .logo {
+    cursor: pointer;
+  }
 }
 
 .main::after {

@@ -4,7 +4,7 @@
   </div>
 
   <div class="block-margin">
-    <labely-import></labely-import>
+    <labely-import (importStatusEmitter)="getOrUpdateDataStatus($event)"></labely-import>
     <p *ngIf="!isDataPresent" class="text-danger pt-2">Please import your csv data</p>
   </div>
 

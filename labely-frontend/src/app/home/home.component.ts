@@ -24,13 +24,14 @@ export class HomeComponent implements OnInit {
     if (!this.isPresent(label)) {
       this.labels.push(label);
       this.isLabelPresent = true;
+      this.isDataPresent = this.labelyService.isDataPresent();
     }
   }
 
   onConfirm(id?: number): void {
     this.labelyService.setLabel(this.labels);
     this.isLabelPresent = this.labelyService.isLabelPresent();
-    this.isDataPresent = this.labelyService.isDataPresent();
+    this.getOrUpdateDataStatus();
 
     if (id === 0) {
       this.toTextClassification();
@@ -50,6 +51,14 @@ export class HomeComponent implements OnInit {
   onRemoveLabel(name: string) {
     this.labels = this.labels.filter(label => label.name !== name);
     this.labelyService.removeLabelByName(name);
+  }
+
+  getOrUpdateDataStatus(status?: boolean) {
+    if (status) {
+      this.isDataPresent = status;
+    } else {
+      this.isDataPresent = this.labelyService.isDataPresent();
+    }
   }
 
   private isPresent(label: Label): boolean {

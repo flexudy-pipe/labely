@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { Papa } from 'ngx-papaparse';
 import { LabelyService } from '../../services/labely.service';
@@ -11,6 +11,7 @@ import { LabelyService } from '../../services/labely.service';
 export class ImporterComponent implements OnInit {
   message: string;
   status = false;
+  @Output() importStatusEmitter = new EventEmitter<boolean>();
 
   constructor(private papa: Papa, private labelyService: LabelyService) {}
 
@@ -30,6 +31,7 @@ export class ImporterComponent implements OnInit {
           this.status = this.labelyService.setData(results.data);
           if (this.status) {
             this.message = 'File was successfully imported';
+            this.importStatusEmitter.emit(true);
           }
         }
       });

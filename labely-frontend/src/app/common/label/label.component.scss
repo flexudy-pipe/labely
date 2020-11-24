@@ -1,0 +1,10 @@
+@import 'src/assets/themes/variables';
+
+.label {
+  &--active {
+    text-transform: capitalize;
+    background-color: $COLOR-SECONDARY;
+    color: white;
+    font-weight: bold;
+  }
+}

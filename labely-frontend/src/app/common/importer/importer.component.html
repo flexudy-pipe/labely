@@ -1,6 +1,35 @@
-<form>
-  <div class="form-group">
-    <label for="csvdata">Please upload a .csv file</label>
-    <input id="csvdata" type="file" class="form-control-file" accept=".csv" (change)="handleFileSelect($event)" />
-  </div>
-</form>
+<div class="image-upload">
+  <h3 class="text-white font-weight-normal">Upload csv file</h3>
+  <label for="file-input">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="61.876"
+      height="73.108"
+      viewBox="0 0 61.876 73.108"
+    >
+      <defs>
+        <filter id="mouse" x="0" y="0" width="61.876" height="73.108" filterUnits="userSpaceOnUse">
+          <feOffset dy="3" input="SourceAlpha" />
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feFlood flood-opacity="0.255" />
+          <feComposite operator="in" in2="blur" />
+          <feComposite in="SourceGraphic" />
+        </filter>
+      </defs>
+      <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#mouse)">
+        <path
+          id="mouse-2"
+          data-name="mouse"
+          d="M23.2,1.07C12.364,2.3,4,10.745,4,21H23.2M4,36.075c0,11.1,9.822,20.1,21.938,20.1s21.938-9,21.938-20.1V26.023H4M28.68,1.07V21h19.2C47.876,10.745,39.485,2.3,28.68,1.07Z"
+          transform="translate(5 4.93)"
+          fill="#fdfefd"
+        />
+      </g>
+    </svg>
+  </label>
+  <input id="file-input" type="file" class="form-control-file" accept=".csv" (change)="handleFileSelect($event)" />
+  <ng-container *ngIf="status"
+    ><p class="text-info">{{ message }}</p></ng-container
+  >
+</div>

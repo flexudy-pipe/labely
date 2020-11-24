@@ -1,0 +1,15 @@
+.image-upload {
+  input {
+    display: none;
+  }
+
+  label {
+    cursor: pointer;
+  }
+}
+
+@media only screen and (max-width: 530px) {
+  h3 {
+    font-size: 1.1rem;
+  }
+}

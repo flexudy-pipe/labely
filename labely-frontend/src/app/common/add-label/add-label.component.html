@@ -1,10 +1,16 @@
 <form [formGroup]="labelForm" (ngSubmit)="onSubmit()">
   <div class="form-group d-inline-block">
-    <label for="label">Please enter your labels</label>
     <div class="input-group">
-      <input autocomplete="off" class="form-control" formControlName="label" id="label" type="text" />
+      <input
+        autocomplete="off"
+        placeholder="Enter a new label"
+        class="form-control form-control-lg input-lg"
+        formControlName="label"
+        id="label"
+        type="text"
+      />
       <div class="input-group-append">
-        <button class="btn btn-outline-primary" type="submit" [disabled]="!labelForm.valid">Add</button>
+        <button class="btn btn-success" type="submit">Add</button>
       </div>
     </div>
   </div>

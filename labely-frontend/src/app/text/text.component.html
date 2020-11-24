@@ -1,17 +1,17 @@
-<labely-pagination-container
-  [paginationConfig]="config"
-  (pageDataConfig)="pageChange($event)"
-></labely-pagination-container>
-
-<ng-container *ngIf="data.length > 0">
-  <div class="d-sm-flex flex-wrap mb-4">
-    <button class="btn btn-success" (click)="download()">Download labeled data</button>
-    <button class="btn btn-outline-danger" (click)="clearStorage()">Discard</button>
+<div class="content">
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <labely-label (activeLabelEmitter)="selectLabel($event)" [activeLabel]="activeLabel" [labels]="labels">
+        </labely-label>
+        <button class="btn btn-success mb-2" (click)="onDataExport()">Download labeled data</button>
+      </div>
+      <p (click)="onRemoveMark($event)" (mouseup)="onSelectText()" id="words">
+        {{ data }}
+      </p>
+    </div>
+    <button class="btn btn-secondary" [disabled]="onDisable()" (click)="onNext()">
+      Next {{ pos + 1 }} / {{ data.length }}
+    </button>
   </div>
-  <labely-items-container [items]="data" [labels]="labels" (labelItem)="labelItem($event)"></labely-items-container>
-</ng-container>
-
-<labely-pagination-container
-  [paginationConfig]="config"
-  (pageDataConfig)="pageChange($event)"
-></labely-pagination-container>
+</div>

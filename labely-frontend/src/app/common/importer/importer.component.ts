@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { Papa } from 'ngx-papaparse';
 import { LabelyService } from '../../services/labely.service';
-import { TextComponent } from '../../text/text.component';
 
 @Component({
   selector: 'labely-import',
@@ -11,9 +9,11 @@ import { TextComponent } from '../../text/text.component';
   styleUrls: ['./importer.component.scss']
 })
 export class ImporterComponent implements OnInit {
-  public static ROUTE = 'import';
+  message: string;
+  status = false;
+  @Output() importStatusEmitter = new EventEmitter<boolean>();
 
-  constructor(private papa: Papa, private labelyService: LabelyService, private route: Router) {}
+  constructor(private papa: Papa, private labelyService: LabelyService) {}
 
   ngOnInit(): void {}
 
@@ -28,8 +28,11 @@ export class ImporterComponent implements OnInit {
         skipEmptyLines: true,
         header: true,
         complete: results => {
-          this.labelyService.setData(results.data);
-          this.route.navigate([TextComponent.ROUTE]);
+          this.status = this.labelyService.setData(results.data);
+          if (this.status) {
+            this.message = 'File was successfully imported';
+            this.importStatusEmitter.emit(true);
+          }
         }
       });
     };

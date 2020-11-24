@@ -1,31 +1,35 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { CsvComponent } from './csv/csv.component';
+import { HomeComponent } from './home/home.component';
 import { TextComponent } from './text/text.component';
-import { LabelComponent } from './label/label.component';
-import { ImporterComponent } from './common/importer/importer.component';
+import { RouteGuard } from './route.guard';
+import { RoutingPath } from './models/routingPath';
 
 const routes: Routes = [
   {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: LabelComponent.ROUTE
+    path: RoutingPath.HOME,
+    component: HomeComponent
   },
   {
-    path: LabelComponent.ROUTE,
-    component: LabelComponent
+    path: RoutingPath.CSV,
+    component: CsvComponent,
+    canActivate: [RouteGuard]
   },
   {
-    path: ImporterComponent.ROUTE,
-    component: ImporterComponent
+    path: RoutingPath.TEXT,
+    component: TextComponent,
+    canActivate: [RouteGuard]
   },
   {
-    path: TextComponent.ROUTE,
-    component: TextComponent
+    path: '**',
+    redirectTo: RoutingPath.HOME
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [RouteGuard]
 })
 export class AppRoutingModule {}

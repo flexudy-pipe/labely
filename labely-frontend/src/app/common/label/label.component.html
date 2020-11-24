@@ -1,0 +1,9 @@
+<div class="pointer">
+  <span
+    (click)="selectLabel(label)"
+    *ngFor="let label of labels"
+    class="label"
+    [ngClass]="{ 'label--active': activeLabel.name === label.name }"
+    >{{ label.name }}</span
+  >
+</div>

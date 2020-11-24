@@ -6,12 +6,17 @@ $COLOR-SHADOW: rgba(0, 0, 0, 0.2);
 $COLOR-DANGER: #e16a6a;
 $COLOR-BODY-BG: #f0f3f7;
 $COLOR-PRIMARY: #5c3e8d;
+$COLOR-SECONDARY: #3a7ca5;
+$COLOR-SECONDARY-H: #2f6690;
+$COLOR-SUCCESS: #3e8d5f;
 
 $theme-colors: (
   'primary': $COLOR-PRIMARY,
+  'secondary': $COLOR-SECONDARY,
   'light': $COLOR_LIGHT_GREY,
   'black': $COLOR_DARK_GREY,
-  'danger': $COLOR-DANGER
+  'danger': $COLOR-DANGER,
+  'success': $COLOR-SUCCESS
 );
 
 // Body

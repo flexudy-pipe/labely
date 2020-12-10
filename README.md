@@ -48,10 +48,24 @@ Labely is self explanatory and very simple to use. <br/>
 ### Classification Feature: 
 Imagine you want to train a model that has to determine whether an email is a spam or not. If it is a spam, the label is `SPAM` and if not, the label is `HAM`. To train such a model, you need data. In particular, you need labeled data (i.e you need to tell the model whether an email is a spam or not). <br/>
 
-Labely can help you `label` or tag those emails (or whatever files you have).
+Labely can help you `label` or tag those emails (or whatever files you have).<br/><br/>
 
-1. Upload your `csv file` containing all your emails on each row. Ofcourse, your csv can have other columns as well. ```Any well formed comma-separated (CSV) file should work.```
-```Tip: If you are unable to read your CSV, then it is probably too large. For now, labely only supports (more or less) about 1000 rows depending on the size (in bytes) of your CSV file. Hence, just chunk your files into smaller ones if you experience any issues.```
-2. Enter your labels. In my case, I only have `SPAM` and `HAM`. You can have as many labels as you want.
-3. Start labelling and download your data after you are done. (```The Discard button will delete any progress made.```) 
+1. Upload your `csv file` containing all your emails on each row. Ofcourse, your csv can have other columns as well. ```Any well formed comma-separated (CSV) file should work.```<br/>
+```Tip: If you are unable to read your CSV, then it is probably too large. For now, labely only supports (more or less) about 1000 rows depending on the size (in bytes) of your CSV file. Hence, just chunk your files into smaller ones if you experience any issues.```<br/>
+2. Enter your labels. In my case, I only have `SPAM` and `HAM`. You can have as many labels as you want.<br/>
+3. Start labelling and download your data after you are done. (```The Discard button will delete any progress made.```)
+
+### Text Annotation Feature: 
+Text annotation is an important task in Natural Language Processing. Here is an example. Suppose you want to teach a computer how to detect names of cities in text.
+So if you give sentence like <br/>```They live in Xeros the capital of Xarx```<br/>, (names i just invented :D), to a computer, it could predict that `Xeros` is a city. 
+
+To train the computer to do this, we need to provide it with examples. This is where labely comes in handy. <br/>
+
+1. Upload your `csv file` containing your text on each row. ```This column must have a column name called "text". A column name is just the value of the first line or row in the file.```<br/>
+```All other columns are discarded since they are not used.``` <br/>
+```Tip: If you are unable to read your CSV, then it is probably too large. For now, labely only supports (more or less) about 1000 rows depending on the size (in bytes) of your CSV file. Hence, just chunk your files into smaller ones or make sure you have a column name "text" if you experience any issues.```<br/>
+```Make sure that ```<br/>
+2. Enter your labels. In my case, I have `CITY`, `PRODUCT`, `PERSON`. You can have as many labels as you want.<br/>
+3. Start labelling and download your data after you are done. (```The Discard button will delete any progress made.```)
+
 

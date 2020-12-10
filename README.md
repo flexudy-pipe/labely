@@ -39,3 +39,19 @@ Currently, the application works without (local) backend server, so it only supp
     * open a terminal <br/>
     * use the command cd and go to the current directory [labely] <br/>
     * `./starter.sh` <br/>
+    
+    
+## Usage
+
+Labely is self explanatory and very simple to use. <br/>
+
+### Classification Feature: 
+Imagine you want to train a model that has to determine whether an email is a spam or not. If it is a spam, the label is `SPAM` and if not, the label is `HAM`. To train such a model, you need data. In particular, you need labeled data (i.e you need to tell the model whether an email is a spam or not). <br/>
+
+Labely can help you `label` or tag those emails (or whatever files you have).
+
+1. Upload your `csv file` containing all your emails on each row. Ofcourse, your csv can have other columns as well. ```Any well formed comma-separated (CSV) file should work.```
+```Tip: If you are unable to read your CSV, then it is probably too large. For now, labely only supports (more or less) about 1000 rows depending on the size (in bytes) of your CSV file. Hence, just chunk your files into smaller ones if you experience any issues.```
+2. Enter your labels. In my case, I only have `SPAM` and `HAM`. You can have as many labels as you want.
+3. Start labelling and download your data after you are done. (```The Discard button will delete any progress made.```) 
+
